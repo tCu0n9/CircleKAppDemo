@@ -52,8 +52,10 @@ public class mainStaffFr extends JFrame {
 	private static JTable tableProduct;
 	private JTextField textField_FindID;
 	private static int id;
-	private static String lgID = LoginFr.loginID;
+	@SuppressWarnings("unused")
+	private static String EmpNAME= LoginFr.EmpName;
 	private JTextField textField;
+	private static int vat;
 	private static int total;
 
 	/**
@@ -138,12 +140,24 @@ public class mainStaffFr extends JFrame {
 		
 	}
 	
-	
+	public void clearData() {
+		Connection cn  = DBConnection.getConnection();
+		String query = "delete billDetail";
+		PreparedStatement ps;
+		try {
+			ps = cn.prepareStatement(query);
+			ps.execute();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
 	
 	public void componentShown(ComponentEvent e) {
 		 
 	}
 	public mainStaffFr() {
+		clearData();
 		addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent e) {
@@ -213,8 +227,8 @@ public class mainStaffFr extends JFrame {
 		btnDelete.setBounds(0, 391, 445, 45);
 		panel_BillDetail.add(btnDelete);
 		
-		JButton btnClean = new JButton("Clean");
-		btnClean.addActionListener(new ActionListener() {
+		JButton btnClear = new JButton("Clear");
+		btnClear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFrame frConfirm = new JFrame("Confirm");
 				if(JOptionPane.showConfirmDialog(frConfirm, "Confirm if you want to detele all ?","Circle K App",JOptionPane.YES_NO_OPTION)==JOptionPane.YES_NO_OPTION) {
@@ -232,9 +246,9 @@ public class mainStaffFr extends JFrame {
 				}		
 			}
 		});
-		btnClean.setFont(new Font("Tahoma", Font.BOLD, 25));
-		btnClean.setBounds(444, 391, 432, 45);
-		panel_BillDetail.add(btnClean);
+		btnClear.setFont(new Font("Tahoma", Font.BOLD, 25));
+		btnClear.setBounds(444, 391, 432, 45);
+		panel_BillDetail.add(btnClear);
 		
 		JPanel panel_TotalBill = new JPanel();
 		panel_TotalBill.setBounds(886, 0, 380, 498);
@@ -247,9 +261,7 @@ public class mainStaffFr extends JFrame {
 		lbl_TotalBill.setBounds(34, 0, 315, 56);
 		panel_TotalBill.add(lbl_TotalBill);
 		
-		
-		JLabel lblPrice = new JLabel("Price: " + total +" VNĐ");
-				
+		JLabel lblPrice = new JLabel("Price:");			
 		lblPrice.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		lblPrice.setBounds(10, 136, 357, 21);
 		panel_TotalBill.add(lblPrice);
@@ -259,7 +271,7 @@ public class mainStaffFr extends JFrame {
 		lblDiscount.setBounds(10, 250, 357, 21);
 		panel_TotalBill.add(lblDiscount);
 		
-		JLabel lblVat = new JLabel("VAT:");
+		JLabel lblVat = new JLabel("VAT 8%: ");
 		lblVat.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		lblVat.setBounds(10, 191, 357, 21);
 		panel_TotalBill.add(lblVat);
@@ -300,7 +312,7 @@ public class mainStaffFr extends JFrame {
 		lblDateTime.setBounds(10, 10, 370, 28);
 		panelInformation.add(lblDateTime);
 		
-		JLabel lblStaffID = new JLabel("Staff Name: null");
+		JLabel lblStaffID = new JLabel("Staff Name: "+ EmpNAME);
 		lblStaffID.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		lblStaffID.setBounds(10, 48, 370, 28);
 		panelInformation.add(lblStaffID);
@@ -389,6 +401,11 @@ public class mainStaffFr extends JFrame {
 								e1.printStackTrace();
 							}
 							Showdulieu();
+							BDtotal();
+							bdVAT();
+							
+							lblPrice.setText("Price: "+ total + " VNĐ");
+							lblVat.setText("VAT 8%: "+ vat +" VNĐ");
 						}						
 					}
 				}	
@@ -470,5 +487,55 @@ public class mainStaffFr extends JFrame {
 			e.printStackTrace();
 		}
 		return false;
+	}
+	
+	private boolean Checkbd() {
+		try {
+			Connection cn = DBConnection.getConnection();
+			
+			String query = "select * from dbo.[billDetail]";
+			PreparedStatement ps = cn.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				return true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	private void BDtotal() {
+		try {
+			Connection cn = DBConnection.getConnection();
+			
+			String query = "SELECT SUM(totalPrice) as Total FROM BillDetail;";
+			PreparedStatement ps = cn.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				total = rs.getInt("total");
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+	
+	private void bdVAT() {
+		try {
+			Connection cn = DBConnection.getConnection();
+			
+			String query = "SELECT SUM(totalPrice) as Total FROM BillDetail;";
+			PreparedStatement ps = cn.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				total = rs.getInt("total");
+				vat = total * 8 / 100;
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 }

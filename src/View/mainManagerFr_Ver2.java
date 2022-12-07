@@ -273,14 +273,14 @@ public class mainManagerFr_Ver2 extends JFrame {
 			String query = "select * from dbo.[Employees] where EmpID = "+ id +" or EmpName like N'%"+ name +"%'";
 			PreparedStatement ps = cn.prepareStatement(query);
 			
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
+			ResultSet rs1 = ps.executeQuery();
+			while (rs1.next()) {
 				Vector vector = new Vector();
-				vector.add(rs.getString("EmpID"));
-				vector.add(rs.getString("EmpName"));
-				vector.add(rs.getString("BoD"));
-				vector.add(rs.getString("EmpAddress"));
-				vector.add(rs.getString("PhoneNum"));
+				vector.add(rs1.getString("EmpID"));
+				vector.add(rs1.getString("EmpName"));
+				vector.add(rs1.getString("BoD"));
+				vector.add(rs1.getString("EmpAddress"));
+				vector.add(rs1.getString("PhoneNum"));
 				model1.addRow(vector);
 			}
 			tableStaff.setModel(model1);
@@ -365,8 +365,10 @@ public class mainManagerFr_Ver2 extends JFrame {
 		staffPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				
 				panelProducts.setVisible(false);
 				panelStaffs.setVisible(true);
+				
 				panelCustomers.setVisible(false);
 				//panelSupplier.setVisible(false);
 				//panelCategory.setVisible(false);
@@ -1028,7 +1030,6 @@ public class mainManagerFr_Ver2 extends JFrame {
 				if(Character.isLetter(c)) {
 					JOptionPane.showMessageDialog(null, "Chỉ nhập số!!");
 					textField_FindID.setText(null);
-					textField_FindID.requestFocus();
 				}
 			}
 		});

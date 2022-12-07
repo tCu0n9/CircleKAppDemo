@@ -40,7 +40,7 @@ public class LoginFr extends JFrame {
 	private JPanel contentPane;
 	private JTextField TextField_UserName;
 	private JPasswordField pwdPassword;
-	public static String loginID;
+	public static String EmpName;
 	private final JPanel cam = new JPanel();
 
 	/**
@@ -76,7 +76,7 @@ public class LoginFr extends JFrame {
 				String username = TextField_UserName.getText();
 				String pass = pwdPassword.getText();
 				
-				String query = "Select * from dbo.[Account] where userName = '"+username+"' and pw = '"+ pass+"'";
+				String query = "Select * from dbo.[Employees] where userName = '"+username+"' and pw = '"+ pass+"'";
 				PreparedStatement ps = cn.prepareStatement(query); 
 				ResultSet rs = ps.executeQuery();
 				while(rs.next()) {
@@ -100,6 +100,28 @@ public class LoginFr extends JFrame {
 			}
 			//sai
 			return 2;
+	}
+	
+	public String getName() {
+		try {
+			Connection cn = DBConnection.getConnection();
+			
+			String username = TextField_UserName.getText();
+			String pass = pwdPassword.getText();
+			
+			String query = "Select * from dbo.[Employees] where userName = '"+username+"' and pw = '"+ pass+"'";
+			PreparedStatement ps = cn.prepareStatement(query); 
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				String StName = rs.getString("EmpName");
+				return StName;
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public LoginFr() {
@@ -187,6 +209,8 @@ public class LoginFr extends JFrame {
 		panel.add(btnLogIn);
 		
 		btnLogIn.addMouseListener(new MouseAdapter() {
+
+
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(Login() == 1) {
@@ -197,7 +221,7 @@ public class LoginFr extends JFrame {
 					
 					dispose();
 				}else if(Login() == 0) {
-					loginID = TextField_UserName.getText();
+					EmpName = getName();
 					
 					mainStaffFr main = new mainStaffFr();
 					main.setVisible(true);
