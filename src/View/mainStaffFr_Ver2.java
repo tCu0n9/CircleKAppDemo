@@ -1,10 +1,8 @@
-
 package View;
 
 
 import java.awt.Color;
 import java.awt.EventQueue;import javax.management.Query;
-import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -47,7 +45,7 @@ import java.awt.event.MouseEvent;
 import java.awt.Label;
 import java.awt.Button;
 
-public class mainStaffFr extends JFrame {
+public class mainStaffFr_Ver2 extends JFrame {
 
 	private JPanel contentPane;
 	private static JTable table_BillDetail;
@@ -55,10 +53,9 @@ public class mainStaffFr extends JFrame {
 	private JTextField textField_FindID;
 	private static int id;
 	@SuppressWarnings("unused")
-	private String EmpNAME;
+	private static String EmpNAME= LoginFr.EmpName;
 	private JTextField textField;
 	private int totalPr;
-	private int totalItem;
 	private static int vat;
 	private static int total;
 
@@ -69,7 +66,7 @@ public class mainStaffFr extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					mainStaffFr frame = new mainStaffFr();
+					mainStaffFr_Ver2 frame = new mainStaffFr_Ver2();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -157,8 +154,10 @@ public class mainStaffFr extends JFrame {
 		}
 	}
 	
-	public mainStaffFr() {
-		EmpNAME= LoginFr.EmpName;
+	public void componentShown(ComponentEvent e) {
+		 
+	}
+	public mainStaffFr_Ver2() {
 		clearData();
 		addComponentListener(new ComponentAdapter() {
 			@Override
@@ -181,7 +180,7 @@ public class mainStaffFr extends JFrame {
 		panel_BillDetail.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(0, 43, 876, 393);
+		scrollPane.setBounds(0, 0, 876, 393);
 		panel_BillDetail.add(scrollPane);
 		
 		table_BillDetail = new JTable();
@@ -198,76 +197,10 @@ public class mainStaffFr extends JFrame {
 				"ID", "Name", "Category ID", "Price", "Quantity", "Total Price"
 			}
 		));
-		table_BillDetail.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		table_BillDetail.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		scrollPane.setViewportView(table_BillDetail);
 		
-		JPanel panel_TotalBill = new JPanel();
-		panel_TotalBill.setBounds(884, 0, 380, 637);
-		contentPane.add(panel_TotalBill);
-		panel_TotalBill.setLayout(null);
-		
-		JLabel lblDiscount = new JLabel("Discount:");
-		lblDiscount.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblDiscount.setBounds(10, 302, 357, 21);
-		panel_TotalBill.add(lblDiscount);
-		
-		JLabel lblVat = new JLabel("VAT 8%:");
-		lblVat.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblVat.setBounds(10, 332, 357, 21);
-		panel_TotalBill.add(lblVat);
-		
-		JLabel lblTotalPrice = new JLabel("Total:");
-		lblTotalPrice.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblTotalPrice.setBounds(10, 363, 360, 25);
-		panel_TotalBill.add(lblTotalPrice);
-		
-		JLabel lblTotalItem = new JLabel("Total Item:");
-		lblTotalItem.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblTotalItem.setBounds(10, 242, 357, 21);
-		panel_TotalBill.add(lblTotalItem);
-		
-		JLabel lblSubtotal = new JLabel("Subtotal:");
-		lblSubtotal.setFont(new Font("Tahoma", Font.PLAIN, 17)); 
-		lblSubtotal.setBounds(10, 272, 357, 21);
-		panel_TotalBill.add(lblSubtotal);
-		
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		Calendar cal = Calendar.getInstance();
-		String time = dateFormat.format(cal.getTime());
-		
-		JLabel lblDateTime = new JLabel("DateTime: " + time);
-		lblDateTime.setBounds(10, 142, 325, 25);
-		panel_TotalBill.add(lblDateTime);
-		lblDateTime.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		
-		JLabel lblBillId = new JLabel("Bill Number:");
-		lblBillId.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblBillId.setBounds(197, 172, 170, 25);
-		panel_TotalBill.add(lblBillId);
-		
-		JLabel lblStaffID = new JLabel("Staff Name: "+ EmpNAME);
-		lblStaffID.setBounds(10, 112, 357, 25);
-		panel_TotalBill.add(lblStaffID);
-		lblStaffID.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		
-		JLabel lblBillCount = new JLabel("Bill ID:");
-		lblBillCount.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblBillCount.setBounds(10, 172, 170, 25);
-		panel_TotalBill.add(lblBillCount);
-		
-		JLabel lblCustomerID = new JLabel("Customer ID:");
-		lblCustomerID.setBounds(10, 202, 109, 28);
-		panel_TotalBill.add(lblCustomerID);
-		lblCustomerID.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		
-		textField = new JTextField();
-		textField.setBounds(132, 202, 203, 28);
-		panel_TotalBill.add(textField);
-		textField.setColumns(10);
-		
 		JButton btnDelete = new JButton("Delete");
-		btnDelete.setBounds(10, 6, 104, 30);
-		panel_BillDetail.add(btnDelete);
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int index = table_BillDetail.getSelectedRow();
@@ -289,24 +222,14 @@ public class mainStaffFr extends JFrame {
 						e1.printStackTrace();
 					}
 				}
-				
-				BDtotal();
-				bdVAT();
-				totalPr(total, vat);
-				totalItem();
-				
-				lblSubtotal.setText("Subtotal: "+ total + " VNĐ");
-				lblVat.setText("VAT 8%: "+ vat +" VNĐ");
-				lblTotalPrice.setText("Total: "+ totalPr +" VNĐ");
-				lblTotalItem.setText("Total Item: "+totalItem);
 			}
 		});
-		btnDelete.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnDelete.setFont(new Font("Tahoma", Font.BOLD, 25));
+		btnDelete.setBounds(0, 391, 445, 45);
+		panel_BillDetail.add(btnDelete);
 		
-		JButton btnClean = new JButton("Clear");
-		btnClean.setBounds(121, 6, 114, 30);
-		panel_BillDetail.add(btnClean);
-		btnClean.addActionListener(new ActionListener() {
+		JButton btnClear = new JButton("Clear");
+		btnClear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFrame frConfirm = new JFrame("Confirm");
 				if(JOptionPane.showConfirmDialog(frConfirm, "Confirm if you want to detele all ?","Circle K App",JOptionPane.YES_NO_OPTION)==JOptionPane.YES_NO_OPTION) {
@@ -321,70 +244,89 @@ public class mainStaffFr extends JFrame {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-				}
-				
-				lblSubtotal.setText("Subtotal: ");
-				lblVat.setText("VAT 8%: ");
-				lblTotalPrice.setText("Total: ");
-				lblTotalItem.setText("Total Item: ");
+				}		
 			}
 		});
-		btnClean.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnClear.setFont(new Font("Tahoma", Font.BOLD, 25));
+		btnClear.setBounds(444, 391, 432, 45);
+		panel_BillDetail.add(btnClear);
 		
+		JPanel panel_TotalBill = new JPanel();
+		panel_TotalBill.setBounds(886, 0, 380, 498);
+		contentPane.add(panel_TotalBill);
+		panel_TotalBill.setLayout(null);
 		
+		JLabel lbl_TotalBill = new JLabel("TOTAL BILL");
+		lbl_TotalBill.setFont(new Font("Tahoma", Font.BOLD, 30));
+		lbl_TotalBill.setHorizontalAlignment(SwingConstants.CENTER);
+		lbl_TotalBill.setBounds(34, 0, 315, 56);
+		panel_TotalBill.add(lbl_TotalBill);
 		
-		JButton btnMomo = new JButton("MOMO");
-		btnMomo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnMomo.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnMomo.setActionCommand("");
-		btnMomo.setBounds(197, 510, 170, 52);
-		panel_TotalBill.add(btnMomo);
+		JLabel lblPrice = new JLabel("Price:");			
+		lblPrice.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblPrice.setBounds(10, 136, 357, 21);
+		panel_TotalBill.add(lblPrice);
 		
-		JButton btnCash = new JButton("CASH");
-		btnCash.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-			}
-		});
-		btnCash.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnCash.setActionCommand("");
-		btnCash.setBounds(10, 448, 170, 52);
-		panel_TotalBill.add(btnCash);
+		JLabel lblDiscount = new JLabel("Discount:");
+		lblDiscount.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblDiscount.setBounds(10, 250, 357, 21);
+		panel_TotalBill.add(lblDiscount);
 		
-		JButton btnDiscount = new JButton("Discount");
-		btnDiscount.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnDiscount.setActionCommand("");
-		btnDiscount.setBounds(197, 448, 170, 52);
-		panel_TotalBill.add(btnDiscount);
+		JLabel lblVat = new JLabel("VAT 8%: ");
+		lblVat.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblVat.setBounds(10, 191, 357, 21);
+		panel_TotalBill.add(lblVat);
 		
-		JButton btnCreditCard = new JButton("CREDIT CARD");
-		btnCreditCard.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnCreditCard.setActionCommand("");
-		btnCreditCard.setBounds(10, 510, 170, 52);
-		panel_TotalBill.add(btnCreditCard);
+		JLabel lblTotalPrice = new JLabel("Total Price:");
+		lblTotalPrice.setFont(new Font("Tahoma", Font.PLAIN, 28));
+		lblTotalPrice.setBounds(10, 325, 360, 39);
+		panel_TotalBill.add(lblTotalPrice);
 		
-		JButton btnShopeepay = new JButton("Sign out");
-		btnShopeepay.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(JOptionPane.showConfirmDialog(null, "Are you sure you want to sign out?") == 0) {
-					LoginFr login = new LoginFr();
-					login.setVisible(true);
-					mainStaffFr.this.dispose();
-				}
-			}
-		});
-		btnShopeepay.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnShopeepay.setActionCommand("");
-		btnShopeepay.setBounds(10, 574, 357, 52);
-		panel_TotalBill.add(btnShopeepay);
+		JButton btnPrintBill = new JButton("Print Bill");
+		btnPrintBill.setFont(new Font("Tahoma", Font.BOLD, 25));
+		btnPrintBill.setActionCommand("");
+		btnPrintBill.setBounds(0, 446, 189, 52);
+		panel_TotalBill.add(btnPrintBill);
 		
-		JLabel lblIMG = new JLabel("");
-		lblIMG.setIcon(new ImageIcon("D:\\JavaWorkSpace\\CircleKAppDemo\\src\\Img\\image.loginframe.png"));
-		lblIMG.setBounds(39, 6, 303, 100);
-		panel_TotalBill.add(lblIMG);
+		JButton btnPay = new JButton("Pay");
+		btnPay.setFont(new Font("Tahoma", Font.BOLD, 25));
+		btnPay.setActionCommand("");
+		btnPay.setBounds(191, 446, 189, 52);
+		panel_TotalBill.add(btnPay);
+		
+		JLabel lblBillID = new JLabel("Bill ID:");
+		lblBillID.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblBillID.setBounds(10, 66, 360, 39);
+		panel_TotalBill.add(lblBillID);
+		
+		JPanel panelInformation = new JPanel();
+		panelInformation.setBounds(886, 508, 380, 129);
+		contentPane.add(panelInformation);
+		panelInformation.setLayout(null);
+		
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		String time = dateFormat.format(cal.getTime());
+		
+		JLabel lblDateTime = new JLabel("DateTime: "+ time);
+		lblDateTime.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblDateTime.setBounds(10, 10, 370, 28);
+		panelInformation.add(lblDateTime);
+		
+		JLabel lblStaffID = new JLabel("Staff Name: "+ EmpNAME);
+		lblStaffID.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblStaffID.setBounds(10, 48, 370, 28);
+		panelInformation.add(lblStaffID);
+		
+		JLabel lblCustomerID = new JLabel("Customer ID:");
+		lblCustomerID.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblCustomerID.setBounds(10, 86, 118, 28);
+		panelInformation.add(lblCustomerID);
+		
+		textField = new JTextField();
+		textField.setBounds(133, 86, 237, 28);
+		panelInformation.add(textField);
+		textField.setColumns(10);
 		
 		JPanel panelProduct = new JPanel();
 		panelProduct.setBounds(0, 446, 876, 191);
@@ -392,11 +334,10 @@ public class mainStaffFr extends JFrame {
 		panelProduct.setLayout(null);
 		
 		JScrollPane scrollPane_3 = new JScrollPane();
-		scrollPane_3.setBounds(0, 28, 876, 161);
+		scrollPane_3.setBounds(0, 0, 783, 153);
 		panelProduct.add(scrollPane_3);
 		
 		tableProduct = new JTable();
-		tableProduct.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		tableProduct.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
@@ -406,7 +347,7 @@ public class mainStaffFr extends JFrame {
 		));
 		scrollPane_3.setViewportView(tableProduct);
 		
-		JButton btnAdd = new JButton("Add");
+		JButton btnAdd = new JButton("ADD");
 		btnAdd.addMouseListener(new MouseAdapter() {
 			private billDetail bd;
 
@@ -461,40 +402,29 @@ public class mainStaffFr extends JFrame {
 								e1.printStackTrace();
 							}
 							Showdulieu();
-							
 							BDtotal();
 							bdVAT();
 							totalPr(total, vat);
-							totalItem();
 							
-							lblSubtotal.setText("Subtotal: "+ total + " VNĐ");
+							lblPrice.setText("Price: "+ total + " VNĐ");
 							lblVat.setText("VAT 8%: "+ vat +" VNĐ");
-							lblTotalPrice.setText("Total: "+ totalPr +" VNĐ");
-							lblTotalItem.setText("Total Item: "+totalItem);
+							lblTotalPrice.setText("Total Price: "+ totalPr +" VNĐ");
 						}						
 					}
 				}	
 			}
 		});
 		btnAdd.setBackground(new Color(240, 240, 240));
-		btnAdd.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnAdd.setBounds(438, 0, 95, 25);
+		btnAdd.setFont(new Font("Tahoma", Font.BOLD, 25));
+		btnAdd.setBounds(781, 0, 95, 189);
 		panelProduct.add(btnAdd);
 		
-		JLabel lblID = new JLabel("ID");
-		lblID.setBounds(0, 0, 37, 25);
-		panelProduct.add(lblID);
-		lblID.setHorizontalAlignment(SwingConstants.CENTER);
-		lblID.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		
 		textField_FindID = new JTextField();
-		textField_FindID.setBounds(35, 0, 288, 25);
+		textField_FindID.setBounds(40, 155, 623, 35);
 		panelProduct.add(textField_FindID);
 		textField_FindID.setColumns(10);
 		
 		JButton btnFind = new JButton("Find");
-		btnFind.setBounds(333, 0, 95, 25);
-		panelProduct.add(btnFind);
 		btnFind.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -512,7 +442,15 @@ public class mainStaffFr extends JFrame {
 				}	
 			}
 		});
-		btnFind.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnFind.setFont(new Font("Tahoma", Font.BOLD, 25));
+		btnFind.setBounds(664, 155, 119, 35);
+		panelProduct.add(btnFind);
+		
+		JLabel lblID = new JLabel("ID");
+		lblID.setHorizontalAlignment(SwingConstants.CENTER);
+		lblID.setFont(new Font("Tahoma", Font.BOLD, 22));
+		lblID.setBounds(5, 155, 37, 35);
+		panelProduct.add(lblID);
 		
 		ImageIcon img = new ImageIcon("D:\\JavaWorkSpace\\CircleKApp\\src\\Img\\download.png");
 		setIconImage(img.getImage());
@@ -543,6 +481,23 @@ public class mainStaffFr extends JFrame {
 			String query = "select * from dbo.[Product] where id = ? ";
 			PreparedStatement ps = cn.prepareStatement(query);
 			ps.setString(1, textField_FindID.getText());
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				return true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	private boolean Checkbd() {
+		try {
+			Connection cn = DBConnection.getConnection();
+			
+			String query = "select * from dbo.[billDetail]";
+			PreparedStatement ps = cn.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				return true;
@@ -590,20 +545,9 @@ public class mainStaffFr extends JFrame {
 	private void totalPr(int total, int vat) {
 		totalPr = this.total + this.vat;
 	}
-	
-	private void totalItem() {
-		try {
-			Connection cn = DBConnection.getConnection();
-			
-			String query = "SELECT SUM(Quantity) as Totalitem FROM BillDetail;";
-			PreparedStatement ps = cn.prepareStatement(query);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				totalItem = rs.getInt("Totalitem");
-			}
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-	}
 }
+
+
+
+
+

@@ -78,12 +78,14 @@ public class mainManagerFr_Ver2 extends JFrame {
 	public static JTable tableStaff;
 	private static JTable tableProduct;
 	private static JTable tableCustomer;
-	private String inputID;
 	private static JTable tableSupplier;
+	private static JTable tableCategory;
+	
 	private JTextField textField_FindID;
 	private JTextField textField_FindName;
-	private static JTable tableCategory;
-
+	
+	private String inputID;
+	private static String pst;
 	/**
 	 * Launch the application.
 	 */
@@ -151,7 +153,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 		
 		try {
 			tableStaff.removeAll();
-			String[] arr1 = {"ID","Full Name","BoD","Address","Phone Number"};
+			String[] arr1 = {"ID", "Full Name", "Age", "Address", "Phone Number", "UserName", "Password", "Position"};
 			DefaultTableModel model1 = new DefaultTableModel(arr1,0);
 			
 			Connection cn = DBConnection.getConnection();
@@ -167,6 +169,17 @@ public class mainManagerFr_Ver2 extends JFrame {
 				vector.add(rs.getString("BoD"));
 				vector.add(rs.getString("EmpAddress"));
 				vector.add(rs.getString("PhoneNum"));
+				vector.add(rs.getString("Username"));
+				vector.add(rs.getString("pw"));
+				
+				int rsPst = Integer.parseInt(rs.getString("position"));
+				if( rsPst == 1) {
+					pst = "Manager";
+				}else if(rsPst == 0) {
+					pst = "Staff";
+				}
+				vector.add(pst);
+				
 				model1.addRow(vector);
 			}
 			tableStaff.setModel(model1);
@@ -675,15 +688,15 @@ public class mainManagerFr_Ver2 extends JFrame {
 		scrollPaneStaff.setViewportView(tableStaff);
 		tableStaff.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null},
 			},
 			new String[] {
-				"ID", "Full Name", "Age", "Address", "Phone Number"
+				"ID", "Full Name", "Age", "Address", "Phone Number", "UserName", "Position", "Password"
 			}
 		));
-		tableStaff.getColumnModel().getColumn(0).setPreferredWidth(25);
-		tableStaff.getColumnModel().getColumn(2).setPreferredWidth(20);
-		tableStaff.getColumnModel().getColumn(3).setPreferredWidth(100);
+		tableStaff.getColumnModel().getColumn(3).setPreferredWidth(25);
+		tableStaff.getColumnModel().getColumn(5).setPreferredWidth(32);
+		tableStaff.getColumnModel().getColumn(6).setPreferredWidth(100);
+		tableStaff.getColumnModel().getColumn(7).setPreferredWidth(79);
 		
 		JLabel lblAddStaff = new JLabel("Add",SwingConstants.CENTER);
 		lblAddStaff.addMouseListener(new MouseAdapter() {
@@ -691,7 +704,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				addStaffTextField_Fr frTextAdd = new addStaffTextField_Fr();
 				frTextAdd.setVisible(true);
-				frTextAdd.setBounds(100, 100, 600, 399);
+				frTextAdd.setBounds(100, 100, 600, 440);
 				frTextAdd.setLocationRelativeTo(null);
 				frTextAdd.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			}
@@ -925,6 +938,12 @@ public class mainManagerFr_Ver2 extends JFrame {
 		scrollPane_2.setViewportView(tableSupplier);
 		
 		JLabel lblAddSupp = new JLabel("Add", SwingConstants.CENTER);
+		lblAddSupp.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+			}
+		});
 		lblAddSupp.setOpaque(true);
 		lblAddSupp.setForeground(Color.WHITE);
 		lblAddSupp.setFont(new Font("Monospaced", Font.BOLD, 20));

@@ -9,6 +9,7 @@ public class Staff {
 	private String BoD;
 	private String address;
 	private String phoneNumb;
+	private String userName, pwd, position;
 	
 	
 	
@@ -18,16 +19,52 @@ public class Staff {
 	}
 
 
-
-	public Staff(int iD, String name, String BoD, String address, String phoneNumb) {
+	public Staff(int iD, String name, String boD, String address, String phoneNumb, String userName, String pwd,
+			String position) {
 		super();
 		ID = iD;
 		this.name = name;
-		this.BoD = BoD;
+		BoD = boD;
 		this.address = address;
 		this.phoneNumb = phoneNumb;
+		this.userName = userName;
+		this.pwd = pwd;
+		this.position = position;
 	}
 
+
+
+
+
+
+	public String getUserName() {
+		return userName;
+	}
+
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+
+	public String getPwd() {
+		return pwd;
+	}
+
+
+	public void setPwd(String pwd) {
+		this.pwd = pwd;
+	}
+
+
+	public String getPosition() {
+		return position;
+	}
+
+
+	public void setPosition(String position) {
+		this.position = position;
+	}
 
 
 	public int getID() {

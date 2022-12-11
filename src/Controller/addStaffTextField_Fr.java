@@ -36,6 +36,7 @@ import java.awt.Event;
 
 import javax.lang.model.element.NestingKind;
 import javax.swing.AbstractButton;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 
 import View.*;
@@ -44,6 +45,12 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.JToggleButton;
+import javax.swing.JCheckBox;
+import javax.swing.JSpinner;
+import javax.swing.JList;
+import javax.swing.JTextArea;
+import javax.swing.JRadioButtonMenuItem;
 
 
 
@@ -53,10 +60,16 @@ public class addStaffTextField_Fr extends JFrame {
 	private JTextField textField_Name;
 	private JTextField textField_Address;
 	private JTextField textField_PhoneNumb;
-	private JTextField txtYyyymmdd;
+	private JTextField textField_BoD;
 	private JTextField textField_ID;
 	private List<Staff> list;
 	StaffDAO staffDAO = new StaffDAO();
+	private JTextField textField_UserName;
+	private JTextField textField_Password;
+	private JRadioButton rdbtnManager;
+	private JRadioButton rdbtnStaff;
+	private String pst;
+	private String bit;
 	
 	/**
 	 * Launch the application.
@@ -66,7 +79,7 @@ public class addStaffTextField_Fr extends JFrame {
 		Staff st = new Staff();
 		st.setID(Integer.parseInt(textField_ID.getText().toString().trim()));
 		st.setName(textField_Name.getText().toString().trim());
-		st.setBoD(txtYyyymmdd.getText().toString().trim());
+		st.setBoD(textField_BoD.getText().toString().trim());
 		st.setAddress(textField_Address.getText().toString().trim());
 		st.setPhoneNumb(textField_PhoneNumb.getText().toString().trim());
 		return st;
@@ -109,7 +122,7 @@ public class addStaffTextField_Fr extends JFrame {
 	
 	public addStaffTextField_Fr() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 600, 325);
+		setBounds(100, 100, 600, 440);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -144,6 +157,17 @@ public class addStaffTextField_Fr extends JFrame {
 		lblNewLabel_2.setBounds(91, 181, 112, 30);
 		contentPane.add(lblNewLabel_2);
 		
+
+		rdbtnManager = new JRadioButton("Manager");
+		rdbtnManager.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		rdbtnManager.setBounds(227, 301, 103, 21);
+		contentPane.add(rdbtnManager);
+		
+		rdbtnStaff = new JRadioButton("Staff");
+		rdbtnStaff.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		rdbtnStaff.setBounds(347, 301, 103, 21);
+		contentPane.add(rdbtnStaff);
+		
 		textField_PhoneNumb = new JTextField();
 		textField_PhoneNumb.addFocusListener(new FocusAdapter() {
 			@Override
@@ -171,28 +195,28 @@ public class addStaffTextField_Fr extends JFrame {
 		lblBoD.setBounds(168, 101, 35, 30);
 		contentPane.add(lblBoD);
 		
-		txtYyyymmdd = new JTextField();
-		txtYyyymmdd.setToolTipText("yyyy-mm-dd");
-		txtYyyymmdd.addFocusListener(new FocusAdapter() {
+		textField_BoD = new JTextField();
+		textField_BoD.setToolTipText("yyyy-mm-dd");
+		textField_BoD.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				String age = txtYyyymmdd.getText();
+				String age = textField_BoD.getText();
 				String reg = "\\d{4}[-]\\d{1,2}[-]\\d{1,2}$";
 				
 				if(age.matches(reg)) {
 				}
 				else {
 					JOptionPane.showMessageDialog(null,"Sai định dạng Ngày sinh (yyyy-mm-dd)!");
-					txtYyyymmdd.requestFocus();
+					textField_BoD.requestFocus();
 					return;
 				}
 				
 			}
 		});
-		txtYyyymmdd.setFont(new Font("Monospaced", Font.BOLD, 14));
-		txtYyyymmdd.setColumns(10);
-		txtYyyymmdd.setBounds(227, 101, 251, 30);
-		contentPane.add(txtYyyymmdd);
+		textField_BoD.setFont(new Font("Monospaced", Font.BOLD, 14));
+		textField_BoD.setColumns(10);
+		textField_BoD.setBounds(227, 101, 251, 30);
+		contentPane.add(textField_BoD);
 		
 		textField_ID = new JTextField();
 		textField_ID.addKeyListener(new KeyAdapter() {
@@ -233,9 +257,9 @@ public class addStaffTextField_Fr extends JFrame {
 					JOptionPane.showMessageDialog(null,"Name không được rỗng!");
 					textField_Name.requestFocus();
 					return;
-				}else if(txtYyyymmdd.getText().equals("")) {
+				}else if(textField_BoD.getText().equals("")) {
 					JOptionPane.showMessageDialog(null,"BoD không được rỗng!");
-					txtYyyymmdd.requestFocus();
+					textField_BoD.requestFocus();
 					return;
 				}else if(textField_Address.getText().equals("")) {
 					JOptionPane.showMessageDialog(null,"Address không được rỗng!");
@@ -250,15 +274,25 @@ public class addStaffTextField_Fr extends JFrame {
 					textField_ID.requestFocus();
 					return;
 				}else {
+					if(e.getSource()==rdbtnManager) {
+						pst = "Manager";
+						bit = "1";
+					}else if(e.getSource()==rdbtnStaff){
+						pst = "Staff";
+						bit = "0";
+					}
+					
 					ArrayList<Staff> list = new ArrayList<>();
 					s = new Staff();
 					s.setID(Integer.parseInt(textField_ID.getText()));
 					s.setName(textField_Name.getText());
-					s.setBoD(txtYyyymmdd.getText());
+					s.setBoD(textField_BoD.getText());
 					s.setAddress(textField_Address.getText());
 					s.setPhoneNumb(textField_PhoneNumb.getText());
-					list.add(s);
-					
+					s.setUserName(textField_UserName.getText());
+					s.setPwd(textField_Password.getText());
+					s.setPosition(pst);
+					list.add(s);	
 					
 					mainManagerFr_Ver2.AddRowToJTableStaff(new Object[]{
 						s.getID(),
@@ -266,17 +300,33 @@ public class addStaffTextField_Fr extends JFrame {
 						s.getBoD(),
 						s.getAddress(),
 						s.getPhoneNumb(),
+						s.getUserName(),
+						s.getPwd(),
+						s.getPosition(),
 				});
 					
 					try {
 						Connection cn = DBConnection.getConnection();
-						String query = "insert into employees(EmpID,EmpName,BoD,EmpAddress,PhoneNum) values(?,?,?,?,?)";
+						
+						int id = Integer.parseInt(textField_ID.getText());
+						String EmpName = textField_Name.getText();
+						String BoD = textField_BoD.getText();
+						String Address = textField_Address.getText();
+						String PhoneNumb = textField_PhoneNumb.getText();
+						String UserName = textField_UserName.getText();
+						String psw = textField_Password.getText();
+						
+						String query = "insert into Employees(EmpID,EmpName,BoD,EmpAddress,PhoneNum,Username,pw,position) values "
+								+ "("+ id  +",N'"+ EmpName +"','"+ BoD +"',N'"+ Address +"','"+ PhoneNumb +"','"+ UserName +"','"+ psw +"','"+ bit +"')";
 						PreparedStatement ps = cn.prepareStatement(query);
-						ps.setString(1, textField_ID.getText());
+						/*ps.setString(1, textField_ID.getText());
 						ps.setString(2, textField_Name.getText());
-						ps.setString(3, txtYyyymmdd.getText());
+						ps.setString(3, textField_BoD.getText());
 						ps.setString(4, textField_Address.getText());
 						ps.setString(5, textField_PhoneNumb.getText());
+						ps.setString(6, textField_UserName.getText());
+						ps.setString(7, textField_Password.getText());
+						ps.setString(8, bit);*/
 						ps.executeUpdate();
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
@@ -293,7 +343,7 @@ public class addStaffTextField_Fr extends JFrame {
 			
 		});
 		btnSave.setFont(new Font("Tahoma", Font.BOLD, 20));
-		btnSave.setBounds(159, 238, 105, 35);
+		btnSave.setBounds(141, 356, 105, 35);
 		contentPane.add(btnSave);
 		
 		JButton btnReset = new JButton("Reset");
@@ -301,14 +351,48 @@ public class addStaffTextField_Fr extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				textField_ID.setText(null);
 				textField_Name.setText(null);
-				txtYyyymmdd.setText(null);
+				textField_BoD.setText(null);
 				textField_Address.setText(null);
 				textField_PhoneNumb.setText(null);
+				textField_UserName.setText(null);
+				textField_Password.setText(null);
 			}
 		});
 		btnReset.setBackground(new Color(255, 255, 255));
 		btnReset.setFont(new Font("Tahoma", Font.BOLD, 20));
-		btnReset.setBounds(314, 238, 105, 35);
+		btnReset.setBounds(358, 356, 105, 35);
 		contentPane.add(btnReset);
+		
+		textField_UserName = new JTextField();
+		textField_UserName.setFont(new Font("Monospaced", Font.BOLD, 14));
+		textField_UserName.setColumns(10);
+		textField_UserName.setBounds(227, 221, 251, 30);
+		contentPane.add(textField_UserName);
+		
+		textField_Password = new JTextField();
+		textField_Password.setFont(new Font("Monospaced", Font.BOLD, 14));
+		textField_Password.setColumns(10);
+		textField_Password.setBounds(227, 261, 251, 30);
+		contentPane.add(textField_Password);
+		
+		JLabel lblUserName = new JLabel("Username", SwingConstants.RIGHT);
+		lblUserName.setFont(new Font("Monospaced", Font.BOLD, 14));
+		lblUserName.setBounds(91, 221, 112, 30);
+		contentPane.add(lblUserName);
+		
+		JLabel lblPwd = new JLabel("Password", SwingConstants.RIGHT);
+		lblPwd.setFont(new Font("Monospaced", Font.BOLD, 14));
+		lblPwd.setBounds(91, 261, 112, 30);
+		contentPane.add(lblPwd);
+		
+		JLabel lblPosition = new JLabel("Position", SwingConstants.RIGHT);
+		lblPosition.setFont(new Font("Monospaced", Font.BOLD, 14));
+		lblPosition.setBounds(91, 297, 112, 30);
+		contentPane.add(lblPosition);
+		
+		
+		ButtonGroup gr = new ButtonGroup();
+		gr.add(rdbtnStaff);
+		gr.add(rdbtnManager);
 	}
 }

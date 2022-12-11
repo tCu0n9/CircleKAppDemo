@@ -226,7 +226,7 @@ public class LoginFr extends JFrame {
 					mainStaffFr main = new mainStaffFr();
 					main.setVisible(true);
 					main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-					main.setBounds(100, 100, 1280, 720);
+					main.setBounds(100, 100, 1280, 675);
 					
 					
 					dispose();
@@ -240,7 +240,6 @@ public class LoginFr extends JFrame {
 		ImageIcon iconUser = new ImageIcon("D:\\JavaWorkSpace\\CircleKAppDemo\\src\\Img\\User (3).png");
 		ImageIcon iconLock = new ImageIcon("D:\\JavaWorkSpace\\CircleKAppDemo\\src\\Img\\locked (3).png");
 
-		
 		JLabel lb_User = new JLabel();
 		lb_User.setBounds(93, 150, 35, 35);
 		panel.add(lb_User);
