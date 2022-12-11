@@ -1,46 +1,55 @@
 package View;
 
 import Model.*;
-import java.awt.EventQueue;
-
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
-
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Image;
-import java.awt.JobAttributes;
-
 import javax.swing.JButton;
 import javax.swing.JComponent;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.plaf.basic.BasicTabbedPaneUI.TabbedPaneLayout;
 import javax.swing.JTabbedPane;
 import javax.swing.JInternalFrame;
-import java.awt.BorderLayout;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JScrollPane;
+import javax.swing.border.LineBorder;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+import java.awt.EventQueue;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.JobAttributes;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.CardLayout;
+
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 
 import org.ietf.jgss.Oid;
 
@@ -53,18 +62,6 @@ import Controller.addCustomerTextField_Fr;
 import Controller.addProductsTextField_Fr;
 import DBConnection.DBConnection;
 
-import javax.swing.JScrollPane;
-import java.awt.CardLayout;
-import javax.swing.border.LineBorder;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import java.awt.Component;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-
-
 
 public class mainManagerFr_Ver2 extends JFrame {
 	private final JLabel lblDashBoardLogo = new JLabel("");
@@ -74,6 +71,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 	private JPanel panelCustomers;
 	private JPanel panelSupplier;
 	private JPanel panelCategory;
+	private JPanel panelBill;
 	
 	public static JTable tableStaff;
 	private static JTable tableProduct;
@@ -86,6 +84,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 	
 	private String inputID;
 	private static String pst;
+	private JTable table;
 	/**
 	 * Launch the application.
 	 */
@@ -184,8 +183,6 @@ public class mainManagerFr_Ver2 extends JFrame {
 			}
 			tableStaff.setModel(model1);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			//LogManager.getLogger(mainManagerFr.class.getName()).log(Level,SERVER,null,e);
 			e.printStackTrace();
 		}
 		
@@ -213,7 +210,6 @@ public class mainManagerFr_Ver2 extends JFrame {
 			}
 			tableCustomer.setModel(model3);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -242,7 +238,6 @@ public class mainManagerFr_Ver2 extends JFrame {
 			}
 			tableSupplier.setModel(model4);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -267,7 +262,6 @@ public class mainManagerFr_Ver2 extends JFrame {
 			}
 			tableCategory.setModel(model5);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -282,10 +276,8 @@ public class mainManagerFr_Ver2 extends JFrame {
 			
 			String id = textField_FindID.getText();
 			String name = textField_FindName.getText();
-			
 			String query = "select * from dbo.[Employees] where EmpID = "+ id +" or EmpName like N'%"+ name +"%'";
 			PreparedStatement ps = cn.prepareStatement(query);
-			
 			ResultSet rs1 = ps.executeQuery();
 			while (rs1.next()) {
 				Vector vector = new Vector();
@@ -297,18 +289,12 @@ public class mainManagerFr_Ver2 extends JFrame {
 				model1.addRow(vector);
 			}
 			tableStaff.setModel(model1);
-
-			
 		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}
 	
-	
-	
-	
-	
+
 	public mainManagerFr_Ver2() {
 		Staff st = new Staff();
 		
@@ -352,12 +338,13 @@ public class mainManagerFr_Ver2 extends JFrame {
 				panelProducts.setVisible(true);
 				panelStaffs.setVisible(false);
 				panelCustomers.setVisible(false);
-				//panelSupplier.setVisible(false);
-				//panelCategory.setVisible(false);
+				panelSupplier.setVisible(false);
+				panelCategory.setVisible(false);
+				panelBill.setVisible(false);
 			}
 		});
 		productPanel.setBorder(new LineBorder(new Color(0xff7f27), 2));
-		productPanel.setBounds(0, 225, 230, 70);
+		productPanel.setBounds(0, 245, 230, 70);
 		productPanel.setBackground(new Color(0xec2934));
 		selectionTabPanel.add(productPanel);
 		productPanel.setLayout(null);
@@ -378,17 +365,16 @@ public class mainManagerFr_Ver2 extends JFrame {
 		staffPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
 				panelProducts.setVisible(false);
 				panelStaffs.setVisible(true);
-				
 				panelCustomers.setVisible(false);
-				//panelSupplier.setVisible(false);
-				//panelCategory.setVisible(false);
+				panelSupplier.setVisible(false);
+				panelCategory.setVisible(false);
+				panelBill.setVisible(false);
 			}
 		});
 		staffPanel.setBorder(new LineBorder(new Color(0xff7f27), 2));
-		staffPanel.setBounds(0, 293, 230, 70);
+		staffPanel.setBounds(0, 313, 230, 70);
 		staffPanel.setBackground(new Color(0xec2934));
 		selectionTabPanel.add(staffPanel);
 		staffPanel.setLayout(null);
@@ -412,12 +398,13 @@ public class mainManagerFr_Ver2 extends JFrame {
 				panelProducts.setVisible(false);
 				panelStaffs.setVisible(false);
 				panelCustomers.setVisible(true);
-				//panelSupplier.setVisible(false);
-				//panelCategory.setVisible(false);
+				panelSupplier.setVisible(false);
+				panelCategory.setVisible(false);
+				panelBill.setVisible(false);
 			}
 		});
 		customerPanel.setBorder(new LineBorder(new Color(0xff7f27), 2));
-		customerPanel.setBounds(0, 360, 230, 70);
+		customerPanel.setBounds(0, 380, 230, 70);
 		customerPanel.setBackground(new Color(0xec2934));
 		selectionTabPanel.add(customerPanel);
 		customerPanel.setLayout(null);
@@ -447,7 +434,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 		});
 		signoutPanel.setBorder(new LineBorder(new Color(0xff7f27), 2));
 		signoutPanel.setBackground(new Color(236, 41, 52));
-		signoutPanel.setBounds(0, 562, 230, 70);
+		signoutPanel.setBounds(0, 650, 230, 70);
 		selectionTabPanel.add(signoutPanel);
 		signoutPanel.setLayout(null);
 		
@@ -462,9 +449,9 @@ public class mainManagerFr_Ver2 extends JFrame {
 		lblIconExit.setIcon(new ImageIcon("D:\\JavaWorkSpace\\CircleKAppDemo\\src\\Img\\icon.exit.png"));
 		signoutPanel.add(lblIconExit);
 		
-		JPanel SupplierPanel = new JPanel();
-		SupplierPanel.addMouseListener(new PanelButtonMouseAdapter(SupplierPanel));
-		SupplierPanel.addMouseListener(new MouseAdapter() {
+		JPanel supplierPanel = new JPanel();
+		supplierPanel.addMouseListener(new PanelButtonMouseAdapter(supplierPanel));
+		supplierPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				panelProducts.setVisible(false);
@@ -472,29 +459,29 @@ public class mainManagerFr_Ver2 extends JFrame {
 				panelCustomers.setVisible(false);
 				panelSupplier.setVisible(true);
 				panelCategory.setVisible(false);
+				panelBill.setVisible(false);
 			}
 		});
-		SupplierPanel.setLayout(null);
-		SupplierPanel.setBorder(new LineBorder(new Color(0xff7f27), 2));
-		SupplierPanel.setBackground(new Color(236, 41, 52));
-		SupplierPanel.setBounds(0, 428, 230, 70);
-		SupplierPanel.addMouseListener(new PanelButtonMouseAdapter(SupplierPanel));
-		selectionTabPanel.add(SupplierPanel);
+		supplierPanel.setLayout(null);
+		supplierPanel.setBorder(new LineBorder(new Color(0xff7f27), 2));
+		supplierPanel.setBackground(new Color(236, 41, 52));
+		supplierPanel.setBounds(0, 448, 230, 70);
+		selectionTabPanel.add(supplierPanel);
 		
 		JLabel lblTextProduct_1 = new JLabel("SUPPLIER");
 		lblTextProduct_1.setForeground(Color.WHITE);
 		lblTextProduct_1.setFont(new Font("Monospaced", Font.BOLD, 20));
 		lblTextProduct_1.setBounds(93, 0, 137, 70);
-		SupplierPanel.add(lblTextProduct_1);
+		supplierPanel.add(lblTextProduct_1);
 		
 		JLabel lblIconSupp = new JLabel("");
 		lblIconSupp.setBounds(30, 10, 50, 50);
 		lblIconSupp.setIcon(new ImageIcon("D:\\JavaWorkSpace\\CircleKAppDemo\\src\\Img\\SupplierIcon.png"));
-		SupplierPanel.add(lblIconSupp);
+		supplierPanel.add(lblIconSupp);
 		
-		JPanel CategoryPanel = new JPanel();
-		CategoryPanel.addMouseListener(new PanelButtonMouseAdapter(CategoryPanel));
-		CategoryPanel.addMouseListener(new MouseAdapter() {
+		JPanel categoryPanel = new JPanel();
+		categoryPanel.addMouseListener(new PanelButtonMouseAdapter(categoryPanel));
+		categoryPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				panelProducts.setVisible(false);
@@ -502,25 +489,54 @@ public class mainManagerFr_Ver2 extends JFrame {
 				panelCustomers.setVisible(false);
 				panelSupplier.setVisible(false);
 				panelCategory.setVisible(true);
+				panelBill.setVisible(false);
 			}
 		});
-		CategoryPanel.setLayout(null);
-		CategoryPanel.setBorder(new LineBorder(new Color(0xff7f27), 2));
-		CategoryPanel.setBackground(new Color(236, 41, 52));
-		CategoryPanel.setBounds(0, 495, 230, 70);
-		CategoryPanel.addMouseListener(new PanelButtonMouseAdapter(CategoryPanel));
-		selectionTabPanel.add(CategoryPanel);
+		categoryPanel.setLayout(null);
+		categoryPanel.setBorder(new LineBorder(new Color(0xff7f27), 2));
+		categoryPanel.setBackground(new Color(236, 41, 52));
+		categoryPanel.setBounds(0, 515, 230, 70);
+		selectionTabPanel.add(categoryPanel);
 		
 		JLabel lblCategory = new JLabel("CATEGORY");
 		lblCategory.setForeground(Color.WHITE);
 		lblCategory.setFont(new Font("Monospaced", Font.BOLD, 20));
 		lblCategory.setBounds(93, 0, 137, 70);
-		CategoryPanel.add(lblCategory);
+		categoryPanel.add(lblCategory);
 		
 		JLabel lblIconCate = new JLabel("");
 		lblIconCate.setBounds(30, 10, 50, 50);
 		lblIconCate.setIcon(new ImageIcon("D:\\JavaWorkSpace\\CircleKAppDemo\\src\\Img\\CategoryIcon.png"));
-		CategoryPanel.add(lblIconCate);
+		categoryPanel.add(lblIconCate);
+		
+		JPanel billPanel = new JPanel();
+		billPanel.addMouseListener(new PanelButtonMouseAdapter(billPanel));
+		billPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				panelProducts.setVisible(false);
+				panelStaffs.setVisible(false);
+				panelCustomers.setVisible(false);
+				panelSupplier.setVisible(false);
+				panelCategory.setVisible(false);
+				panelBill.setVisible(true);
+			}
+		});
+		billPanel.setLayout(null);
+		billPanel.setBorder(new LineBorder(new Color(0xff7f27), 2));
+		billPanel.setBackground(new Color(236, 41, 52));
+		billPanel.setBounds(0, 583, 230, 70);
+		selectionTabPanel.add(billPanel);
+		
+		JLabel lblTextSignout_1 = new JLabel("BILL");
+		lblTextSignout_1.setForeground(Color.WHITE);
+		lblTextSignout_1.setFont(new Font("Monospaced", Font.BOLD, 20));
+		lblTextSignout_1.setBounds(93, 0, 137, 70);
+		billPanel.add(lblTextSignout_1);
+		
+		JLabel lblIconBill = new JLabel("");
+		lblIconBill.setBounds(30, 10, 50, 50);
+		billPanel.add(lblIconBill);
 		
 		JPanel mainContentPanel = new JPanel();
 		mainContentPanel.setBounds(240, 41, 1015, 680);
@@ -643,7 +659,6 @@ public class mainManagerFr_Ver2 extends JFrame {
 						ps.execute();
 						showDataProduct();
 					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
@@ -674,6 +689,8 @@ public class mainManagerFr_Ver2 extends JFrame {
 		panelStaffs.add(scrollPaneStaff);
 		
 		tableStaff = new JTable() {
+			private static final long serialVersionUID = 1L;
+
 			public boolean isCellEditTable(int row, int column) {
 				for(int i=0;i<tableStaff.getRowCount();i++) {
 					if(row == i && column == 0) {
@@ -774,7 +791,6 @@ public class mainManagerFr_Ver2 extends JFrame {
 						
 						showDataStaff();
 					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
@@ -896,7 +912,6 @@ public class mainManagerFr_Ver2 extends JFrame {
 						
 						showDataCustomer();
 					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
@@ -1026,6 +1041,17 @@ public class mainManagerFr_Ver2 extends JFrame {
 		lblDeleteCate.setBounds(850, 600, 155, 70);
 		panelCategory.add(lblDeleteCate);
 		
+		panelBill = new JPanel();
+		layeredPane.add(panelBill, "name_275445001643400");
+		panelBill.setLayout(null);
+		
+		JScrollPane scrollPane_4 = new JScrollPane();
+		scrollPane_4.setBounds(10, 10, 995, 565);
+		panelBill.add(scrollPane_4);
+		
+		table = new JTable();
+		scrollPane_4.setViewportView(table);
+		
 		JLabel lblExit = new JLabel("X");
 		lblExit.addMouseListener(new MouseAdapter() {
 			@Override
@@ -1108,7 +1134,6 @@ public class mainManagerFr_Ver2 extends JFrame {
 	}
 	
 	public static void AddRowToJTableStaff(Object[] dataRow) {
-		// TODO Auto-generated method stub
 		DefaultTableModel model = (DefaultTableModel)tableStaff.getModel();
 		model.addRow(dataRow);
 	}
@@ -1132,7 +1157,6 @@ public class mainManagerFr_Ver2 extends JFrame {
 				return true;
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -1152,7 +1176,6 @@ public class mainManagerFr_Ver2 extends JFrame {
 				return true;
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -1162,7 +1185,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 	private boolean checkTrungIDCustomer() {
 		try {
 			Connection cn = DBConnection.getConnection();
-		
+			
 			String query = "select * from dbo.[Customer] where CustomerID = ?";
 			PreparedStatement ps = cn.prepareStatement(query);
 			ps.setString(1, inputID);
@@ -1171,7 +1194,6 @@ public class mainManagerFr_Ver2 extends JFrame {
 				return true;
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
