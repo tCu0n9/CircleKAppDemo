@@ -41,6 +41,7 @@ public class LoginFr extends JFrame {
 	private JTextField TextField_UserName;
 	private JPasswordField pwdPassword;
 	public static String EmpName;
+	public static int EmpID;
 	private final JPanel cam = new JPanel();
 
 	/**
@@ -122,6 +123,28 @@ public class LoginFr extends JFrame {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public int getID() {
+		try {
+			Connection cn = DBConnection.getConnection();
+			
+			String username = TextField_UserName.getText();
+			String pass = pwdPassword.getText();
+			
+			String query = "Select * from dbo.[Employees] where userName = '"+username+"' and pw = '"+ pass+"'";
+			PreparedStatement ps = cn.prepareStatement(query); 
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				int StID = rs.getInt("EmpID");
+				return StID;
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
 	}
 	
 	public LoginFr() {
@@ -209,19 +232,18 @@ public class LoginFr extends JFrame {
 		panel.add(btnLogIn);
 		
 		btnLogIn.addMouseListener(new MouseAdapter() {
-
-
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(Login() == 1) {
 					mainManagerFr_Ver2 main = new mainManagerFr_Ver2();
 					main.setVisible(true);
 					main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-					main.setBounds(100, 100, 1280, 720);
+					main.setBounds(100, 50, 1280, 720);
 					
 					dispose();
 				}else if(Login() == 0) {
 					EmpName = getName();
+					EmpID = getID();
 					
 					mainStaffFr main = new mainStaffFr();
 					main.setVisible(true);

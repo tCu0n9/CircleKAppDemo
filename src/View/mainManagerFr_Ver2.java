@@ -55,12 +55,15 @@ import org.ietf.jgss.Oid;
 
 import Controller.addStaffTextField_Fr;
 import Controller.findDataStaff_Fr;
+import Controller.showDetailsBill_Fr;
 import Controller.show_update_RowDataCustomer_Fr;
 import Controller.show_update_RowDataProduct_Fr;
 import Controller.show_update_RowDataStaff_Fr;
 import Controller.addCustomerTextField_Fr;
 import Controller.addProductsTextField_Fr;
 import DBConnection.DBConnection;
+import javax.swing.event.AncestorListener;
+import javax.swing.event.AncestorEvent;
 
 
 public class mainManagerFr_Ver2 extends JFrame {
@@ -71,20 +74,22 @@ public class mainManagerFr_Ver2 extends JFrame {
 	private JPanel panelCustomers;
 	private JPanel panelSupplier;
 	private JPanel panelCategory;
-	private JPanel panelBill;
+	private JPanel panelTakings;
 	
 	public static JTable tableStaff;
 	private static JTable tableProduct;
 	private static JTable tableCustomer;
 	private static JTable tableSupplier;
 	private static JTable tableCategory;
+	private static JTable tableTakings;
 	
 	private JTextField textField_FindID;
 	private JTextField textField_FindName;
 	
 	private String inputID;
 	private static String pst;
-	private JTable table;
+	public static String Billid;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -212,7 +217,6 @@ public class mainManagerFr_Ver2 extends JFrame {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
 	public static void showDataSupplier() {
@@ -266,6 +270,32 @@ public class mainManagerFr_Ver2 extends JFrame {
 		}
 	}
 	
+	public static void showDataTakings() {
+		
+		try {
+			tableCustomer.removeAll();
+			String[] arr3 = {"Bill ID", "Total Price", "Bill Date", "Staff ID"};
+			DefaultTableModel model3 = new DefaultTableModel(arr3,0);
+			
+			Connection cn = DBConnection.getConnection();
+			
+			String query = "select * from dbo.Bill order by billDate DESC";
+			PreparedStatement ps = cn.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				Vector vector = new Vector();
+				vector.add(rs.getString("billID"));
+				vector.add(rs.getString("price"));
+				vector.add(rs.getString("billDate"));
+				vector.add(rs.getString("empID"));
+				model3.addRow(vector);
+			}
+			tableTakings.setModel(model3);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void findStaff() {
 		try {
 			tableStaff.removeAll();
@@ -306,10 +336,11 @@ public class mainManagerFr_Ver2 extends JFrame {
 				showDataCustomer();
 				showDataSupplier();
 				showDataCategory();
+				showDataTakings();
 			}
 		});
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1280, 720);
+		setBounds(100, 50, 1280, 720);
 		setUndecorated(true);
 		
 		JPanel mainPanel = new JPanel();
@@ -340,7 +371,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 				panelCustomers.setVisible(false);
 				panelSupplier.setVisible(false);
 				panelCategory.setVisible(false);
-				panelBill.setVisible(false);
+				panelTakings.setVisible(false);
 			}
 		});
 		productPanel.setBorder(new LineBorder(new Color(0xff7f27), 2));
@@ -370,7 +401,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 				panelCustomers.setVisible(false);
 				panelSupplier.setVisible(false);
 				panelCategory.setVisible(false);
-				panelBill.setVisible(false);
+				panelTakings.setVisible(false);
 			}
 		});
 		staffPanel.setBorder(new LineBorder(new Color(0xff7f27), 2));
@@ -400,7 +431,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 				panelCustomers.setVisible(true);
 				panelSupplier.setVisible(false);
 				panelCategory.setVisible(false);
-				panelBill.setVisible(false);
+				panelTakings.setVisible(false);
 			}
 		});
 		customerPanel.setBorder(new LineBorder(new Color(0xff7f27), 2));
@@ -459,7 +490,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 				panelCustomers.setVisible(false);
 				panelSupplier.setVisible(true);
 				panelCategory.setVisible(false);
-				panelBill.setVisible(false);
+				panelTakings.setVisible(false);
 			}
 		});
 		supplierPanel.setLayout(null);
@@ -489,7 +520,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 				panelCustomers.setVisible(false);
 				panelSupplier.setVisible(false);
 				panelCategory.setVisible(true);
-				panelBill.setVisible(false);
+				panelTakings.setVisible(false);
 			}
 		});
 		categoryPanel.setLayout(null);
@@ -519,7 +550,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 				panelCustomers.setVisible(false);
 				panelSupplier.setVisible(false);
 				panelCategory.setVisible(false);
-				panelBill.setVisible(true);
+				panelTakings.setVisible(true);
 			}
 		});
 		billPanel.setLayout(null);
@@ -528,15 +559,16 @@ public class mainManagerFr_Ver2 extends JFrame {
 		billPanel.setBounds(0, 583, 230, 70);
 		selectionTabPanel.add(billPanel);
 		
-		JLabel lblTextSignout_1 = new JLabel("BILL");
-		lblTextSignout_1.setForeground(Color.WHITE);
-		lblTextSignout_1.setFont(new Font("Monospaced", Font.BOLD, 20));
-		lblTextSignout_1.setBounds(93, 0, 137, 70);
-		billPanel.add(lblTextSignout_1);
+		JLabel lblTakings = new JLabel("TAKINGS");
+		lblTakings.setForeground(Color.WHITE);
+		lblTakings.setFont(new Font("Monospaced", Font.BOLD, 20));
+		lblTakings.setBounds(93, 0, 137, 70);
+		billPanel.add(lblTakings);
 		
-		JLabel lblIconBill = new JLabel("");
-		lblIconBill.setBounds(30, 10, 50, 50);
-		billPanel.add(lblIconBill);
+		JLabel lblIconTakings = new JLabel("");
+		lblIconTakings.setIcon(new ImageIcon("D:\\JavaWorkSpace\\CircleKAppDemo\\src\\Img\\icon.takings.png"));
+		lblIconTakings.setBounds(30, 10, 50, 50);
+		billPanel.add(lblIconTakings);
 		
 		JPanel mainContentPanel = new JPanel();
 		mainContentPanel.setBounds(240, 41, 1015, 680);
@@ -1041,16 +1073,58 @@ public class mainManagerFr_Ver2 extends JFrame {
 		lblDeleteCate.setBounds(850, 600, 155, 70);
 		panelCategory.add(lblDeleteCate);
 		
-		panelBill = new JPanel();
-		layeredPane.add(panelBill, "name_275445001643400");
-		panelBill.setLayout(null);
+		panelTakings = new JPanel();
+		layeredPane.add(panelTakings, "name_275445001643400");
+		panelTakings.setLayout(null);
 		
 		JScrollPane scrollPane_4 = new JScrollPane();
 		scrollPane_4.setBounds(10, 10, 995, 565);
-		panelBill.add(scrollPane_4);
+		panelTakings.add(scrollPane_4);
 		
-		table = new JTable();
-		scrollPane_4.setViewportView(table);
+		tableTakings = new JTable();
+		tableTakings.setFont(new Font("Cambria", Font.BOLD, 14));
+		tableTakings.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Bill ID", "Total Price", "Bill Date", "Staff ID"
+			}
+		));
+		scrollPane_4.setViewportView(tableTakings);
+		
+		JLabel lblShowDetails = new JLabel("Show Details", SwingConstants.CENTER);
+		lblShowDetails.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int index = tableTakings.getSelectedRow();
+				
+				if(index == -1) {
+					JOptionPane.showMessageDialog(null, "Chưa chọn đối tượng !");
+				}else {
+					TableModel model = tableTakings.getModel();
+					Billid = model.getValueAt(index, 0).toString();
+					showDetailsBill_Fr jtableRowdata = new showDetailsBill_Fr();
+					jtableRowdata.setVisible(true);
+					jtableRowdata.setBounds(100, 100, 670, 365);
+					jtableRowdata.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				
+				}
+			}
+		});
+		lblShowDetails.addAncestorListener(new AncestorListener() {
+			public void ancestorAdded(AncestorEvent event) {
+			}
+			public void ancestorMoved(AncestorEvent event) {
+			}
+			public void ancestorRemoved(AncestorEvent event) {
+			}
+		});
+		lblShowDetails.setOpaque(true);
+		lblShowDetails.setForeground(Color.WHITE);
+		lblShowDetails.setFont(new Font("Monospaced", Font.BOLD, 20));
+		lblShowDetails.setBackground(new Color(236, 41, 52));
+		lblShowDetails.setBounds(10, 585, 155, 70);
+		panelTakings.add(lblShowDetails);
 		
 		JLabel lblExit = new JLabel("X");
 		lblExit.addMouseListener(new MouseAdapter() {

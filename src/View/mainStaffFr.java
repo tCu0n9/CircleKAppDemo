@@ -1,22 +1,20 @@
+
 package View;
 
-import javax.management.Query;
 
-import java.lang.System.Logger;
-
+import java.awt.Color;
+import java.awt.EventQueue;import javax.management.Query;
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
-import javax.swing.JTextField;
-import javax.swing.JFormattedTextField;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.JTabbedPane;
+import java.awt.Font;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -27,31 +25,28 @@ import Model.Staff;
 import Model.billDetail;
 import View.*;
 
-import java.awt.Font;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
+import javax.swing.JTextField;
+import javax.swing.JFormattedTextField;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.Label;
-import java.awt.Button;
-import java.awt.Color;
-import java.awt.EventQueue;
-
+import java.lang.System.Logger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Vector;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.Label;
+import java.awt.Button;
+
 public class mainStaffFr extends JFrame {
 
 	private JPanel contentPane;
@@ -61,14 +56,13 @@ public class mainStaffFr extends JFrame {
 	private static int id;
 	@SuppressWarnings("unused")
 	private String EmpNAME;
+	private int EmpID;
 	private JTextField textField;
 	private int totalPr;
 	private int totalItem;
 	private static int vat;
 	private static int total;
-	private JPanel panelPayment;
-	private JLabel lblTotalPrice;
-	private JPanel panelDiscount;
+	private int randomNumb;
 
 	/**
 	 * Launch the application.
@@ -165,8 +159,16 @@ public class mainStaffFr extends JFrame {
 		}
 	}
 	
+	public int generateNumber() {       
+        double randomDouble = Math.random();
+        randomDouble = (randomDouble * (999999999-100000000) + 1)+100000000;
+        int randomInt = (int) randomDouble;
+        return randomInt;
+	}
+	
 	public mainStaffFr() {
-		EmpNAME= LoginFr.EmpName;
+		EmpNAME = LoginFr.EmpName;
+		EmpID = LoginFr.EmpID;
 		clearData();
 		addComponentListener(new ComponentAdapter() {
 			@Override
@@ -175,7 +177,7 @@ public class mainStaffFr extends JFrame {
 			}
 		});
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1280, 720);
+		setBounds(100, 100, 1280, 675);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(0xffffff));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -183,14 +185,14 @@ public class mainStaffFr extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JPanel panelBillDetail = new JPanel();
-		panelBillDetail.setBounds(0, 0, 876, 436);
-		contentPane.add(panelBillDetail);
-		panelBillDetail.setLayout(null);
+		JPanel panel_BillDetail = new JPanel();
+		panel_BillDetail.setBounds(0, 0, 876, 436);
+		contentPane.add(panel_BillDetail);
+		panel_BillDetail.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(0, 43, 876, 393);
-		panelBillDetail.add(scrollPane);
+		panel_BillDetail.add(scrollPane);
 		
 		table_BillDetail = new JTable();
 		table_BillDetail.addComponentListener(new ComponentAdapter() {
@@ -209,156 +211,74 @@ public class mainStaffFr extends JFrame {
 		table_BillDetail.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		scrollPane.setViewportView(table_BillDetail);
 		
-		JPanel panelTotalBill = new JPanel();
-		panelTotalBill.setBounds(884, 0, 380, 681);
-		contentPane.add(panelTotalBill);
-		panelTotalBill.setLayout(null);
-		
-		panelPayment = new JPanel();
-		panelPayment.setBounds(10, 404, 357, 266);
-		panelTotalBill.add(panelPayment);
-		panelPayment.setBackground(new Color(255, 255, 255));
-		panelPayment.setVisible(false);
-		panelPayment.setLayout(null);
-		
-		panelDiscount = new JPanel();
-		panelDiscount.setBackground(new Color(255, 255, 255));
-		panelDiscount.setBounds(10, 404, 357, 266);
-		panelTotalBill.add(panelDiscount);
-		panelDiscount.setVisible(false);
-		panelDiscount.setLayout(null);
-		
-		JLabel lblDc25 = new JLabel("DC25", SwingConstants.CENTER);
-		lblDc25.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				panelDiscount.setVisible(false);
-			}
-		});
-		lblDc25.setOpaque(true);
-		lblDc25.setForeground(Color.WHITE);
-		lblDc25.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblDc25.setBackground(new Color(64, 0, 127));
-		lblDc25.setBounds(22, 25, 135, 50);
-		panelDiscount.add(lblDc25);
-		
-		JLabel lblFreeship = new JLabel("FREESHIP", SwingConstants.CENTER);
-		lblFreeship.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				panelDiscount.setVisible(false);
-			}
-		});
-		lblFreeship.setOpaque(true);
-		lblFreeship.setForeground(Color.WHITE);
-		lblFreeship.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblFreeship.setBackground(new Color(64, 0, 127));
-		lblFreeship.setBounds(189, 25, 135, 50);
-		panelDiscount.add(lblFreeship);
-		
-		JLabel lblDc50 = new JLabel("DC50", SwingConstants.CENTER);
-		lblDc50.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				panelDiscount.setVisible(false);
-			}
-		});
-		lblDc50.setOpaque(true);
-		lblDc50.setForeground(Color.WHITE);
-		lblDc50.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblDc50.setBackground(new Color(64, 0, 127));
-		lblDc50.setBounds(22, 86, 135, 50);
-		panelDiscount.add(lblDc50);
-		
-		JLabel lbl1K = new JLabel("1K", SwingConstants.CENTER);
-		lbl1K.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				panelDiscount.setVisible(false);
-			}
-		});
-		lbl1K.setOpaque(true);
-		lbl1K.setForeground(Color.WHITE);
-		lbl1K.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lbl1K.setBackground(new Color(64, 0, 127));
-		lbl1K.setBounds(189, 86, 135, 50);
-		panelDiscount.add(lbl1K);
-		
-		JLabel lblDc75 = new JLabel("DC75", SwingConstants.CENTER);
-		lblDc75.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				panelDiscount.setVisible(false);
-			}
-		});
-		lblDc75.setOpaque(true);
-		lblDc75.setForeground(Color.WHITE);
-		lblDc75.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblDc75.setBackground(new Color(64, 0, 127));
-		lblDc75.setBounds(22, 147, 135, 50);
-		panelDiscount.add(lblDc75);
-		
-		JLabel lblNone = new JLabel("NONE", SwingConstants.CENTER);
-		lblNone.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				panelDiscount.setVisible(false);
-			}
-		});
-		lblNone.setOpaque(true);
-		lblNone.setForeground(Color.WHITE);
-		lblNone.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblNone.setBackground(new Color(64, 0, 127));
-		lblNone.setBounds(189, 147, 135, 50);
-		panelDiscount.add(lblNone);
+		JPanel panel_TotalBill = new JPanel();
+		panel_TotalBill.setBounds(884, 0, 380, 637);
+		contentPane.add(panel_TotalBill);
+		panel_TotalBill.setLayout(null);
 		
 		JLabel lblDiscount = new JLabel("Discount:");
 		lblDiscount.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblDiscount.setBounds(10, 302, 218, 25);
-		panelTotalBill.add(lblDiscount);
+		lblDiscount.setBounds(10, 302, 357, 21);
+		panel_TotalBill.add(lblDiscount);
 		
-		JLabel lblVat = new JLabel("VAT %:");
+		JLabel lblVat = new JLabel("VAT 8%:");
 		lblVat.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblVat.setBounds(10, 332, 357, 25);
-		panelTotalBill.add(lblVat);
+		lblVat.setBounds(10, 332, 357, 21);
+		panel_TotalBill.add(lblVat);
+		
+		JLabel lblTotalPrice = new JLabel("Total:");
+		lblTotalPrice.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblTotalPrice.setBounds(10, 363, 360, 25);
+		panel_TotalBill.add(lblTotalPrice);
 		
 		JLabel lblTotalItem = new JLabel("Total Item:");
 		lblTotalItem.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblTotalItem.setBounds(10, 242, 357, 25);
-		panelTotalBill.add(lblTotalItem);
+		lblTotalItem.setBounds(10, 242, 357, 21);
+		panel_TotalBill.add(lblTotalItem);
 		
 		JLabel lblSubtotal = new JLabel("Subtotal:");
 		lblSubtotal.setFont(new Font("Tahoma", Font.PLAIN, 17)); 
-		lblSubtotal.setBounds(10, 272, 357, 25);
-		panelTotalBill.add(lblSubtotal);
+		lblSubtotal.setBounds(10, 272, 357, 21);
+		panel_TotalBill.add(lblSubtotal);
 		
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Calendar cal = Calendar.getInstance();
 		String time = dateFormat.format(cal.getTime());
 		
 		JLabel lblDateTime = new JLabel("DateTime: " + time);
 		lblDateTime.setBounds(10, 142, 325, 25);
-		panelTotalBill.add(lblDateTime);
+		panel_TotalBill.add(lblDateTime);
 		lblDateTime.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		
-		JLabel lblBillId = new JLabel("Bill Number:");
-		lblBillId.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblBillId.setBounds(197, 172, 170, 25);
-		panelTotalBill.add(lblBillId);
+		JLabel lblBillNumber = new JLabel("Bill Number:");
+		lblBillNumber.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblBillNumber.setBounds(197, 172, 170, 25);
+		panel_TotalBill.add(lblBillNumber);
 		
 		JLabel lblStaffID = new JLabel("Staff Name: "+ EmpNAME);
 		lblStaffID.setBounds(10, 112, 357, 25);
-		panelTotalBill.add(lblStaffID);
+		panel_TotalBill.add(lblStaffID);
 		lblStaffID.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		
-		JLabel lblBillCount = new JLabel("Bill ID:");
-		lblBillCount.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblBillCount.setBounds(10, 172, 170, 25);
-		panelTotalBill.add(lblBillCount);
+		randomNumb = generateNumber();
+		JLabel lblBillID = new JLabel("Bill ID: "+ randomNumb);
+		lblBillID.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblBillID.setBounds(10, 172, 170, 25);
+		panel_TotalBill.add(lblBillID);
+		
+		JLabel lblCustomerID = new JLabel("Customer ID:");
+		lblCustomerID.setBounds(10, 202, 109, 28);
+		panel_TotalBill.add(lblCustomerID);
+		lblCustomerID.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		
+		textField = new JTextField();
+		textField.setBounds(132, 202, 203, 28);
+		panel_TotalBill.add(textField);
+		textField.setColumns(10);
 		
 		JButton btnDelete = new JButton("Delete");
 		btnDelete.setBounds(10, 6, 104, 30);
-		panelBillDetail.add(btnDelete);
+		panel_BillDetail.add(btnDelete);
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int index = table_BillDetail.getSelectedRow();
@@ -370,10 +290,12 @@ public class mainStaffFr extends JFrame {
 					
 					try {
 						Connection cn = DBConnection.getConnection();
-						String query = "delete from dbo.[billDetail] where ID = ?";
-						PreparedStatement ps = cn.prepareStatement(query);
-						ps.setString(1,id);
-						ps.execute();
+						String query1 = "delete from dbo.[billDetail] where ID = "+ id +"";
+						String query2 = "delete from dbo.[Details] where ID = "+ id +"";
+						PreparedStatement ps1 = cn.prepareStatement(query1);
+						PreparedStatement ps2 = cn.prepareStatement(query2);
+						ps1.execute();
+						ps2.execute();
 						Showdulieu();
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
@@ -396,15 +318,16 @@ public class mainStaffFr extends JFrame {
 		
 		JButton btnClean = new JButton("Clear");
 		btnClean.setBounds(121, 6, 114, 30);
-		panelBillDetail.add(btnClean);
+		panel_BillDetail.add(btnClean);
 		btnClean.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFrame frConfirm = new JFrame("Confirm");
 				if(JOptionPane.showConfirmDialog(frConfirm, "Confirm if you want to detele all ?","Circle K App",JOptionPane.YES_NO_OPTION)==JOptionPane.YES_NO_OPTION) {
-					Connection cn  = DBConnection.getConnection();
-					String query = "delete billDetail";
-					PreparedStatement ps;
 					try {
+						Connection cn  = DBConnection.getConnection();
+						String query = "delete billDetail;\r\n"
+										+ "delete details;";
+						PreparedStatement ps;
 						ps = cn.prepareStatement(query);
 						ps.execute();
 						Showdulieu();
@@ -422,22 +345,70 @@ public class mainStaffFr extends JFrame {
 		});
 		btnClean.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		JLabel lblCustomerID = new JLabel("Customer ID:");
-		lblCustomerID.setBounds(245, 6, 109, 25);
-		panelBillDetail.add(lblCustomerID);
-		lblCustomerID.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		JButton btnCash = new JButton("Payment");
+		btnCash.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				
+				DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+				Calendar cal = Calendar.getInstance();
+				String time = dateFormat.format(cal.getTime());
+				
+				JFrame frConfirm = new JFrame("Confirm");
+				if(JOptionPane.showConfirmDialog(frConfirm, "Payment confirmation!","Circle K App",JOptionPane.YES_NO_OPTION)==JOptionPane.YES_NO_OPTION) {
+					if(checkBD() == false) {
+						JOptionPane.showMessageDialog(null, "Chưa có mặt hàng!");
+					}else {
+						randomNumb = generateNumber();
+						lblBillID.setText("Bill ID: "+ randomNumb);
+						
+						try {
+							Connection cn = DBConnection.getConnection();
+							
+							String query = "insert into bill(billID,price, billDate,empID) values("+ randomNumb +","+ totalPr +",'"+ time +"',"+EmpID+")";
+							PreparedStatement ps = cn.prepareStatement(query);
+							ps.executeUpdate();
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						
+						try {
+							Connection cn  = DBConnection.getConnection();
+							String query = "delete billDetail";
+							PreparedStatement ps;
+							ps = cn.prepareStatement(query);
+							ps.execute();
+							Showdulieu();
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						
+						lblSubtotal.setText("Subtotal: ");
+						lblVat.setText("VAT 8%: ");
+						lblTotalPrice.setText("Total: ");
+						lblTotalItem.setText("Total Item: ");
+					}
+				}
+				
+				
+			}
+		});
+		btnCash.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnCash.setActionCommand("");
+		btnCash.setBounds(10, 448, 170, 52);
+		panel_TotalBill.add(btnCash);
 		
-		textField = new JTextField();
-		textField.setBounds(367, 7, 203, 25);
-		panelBillDetail.add(textField);
-		textField.setColumns(10);
+		JButton btnDiscount = new JButton("Discount");
+		btnDiscount.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnDiscount.setActionCommand("");
+		btnDiscount.setBounds(197, 448, 170, 52);
+		panel_TotalBill.add(btnDiscount);
 		
-		JLabel lblSignout = new JLabel("Sign out",SwingConstants.CENTER);
-		lblSignout.setForeground(new Color(255, 255, 255));
-		lblSignout.setBackground(new Color(64, 0, 128));
-		lblSignout.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
+		JButton btnShopeepay = new JButton("Sign out");
+		btnShopeepay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				if(JOptionPane.showConfirmDialog(null, "Are you sure you want to sign out?") == 0) {
 					LoginFr login = new LoginFr();
 					login.setVisible(true);
@@ -445,145 +416,23 @@ public class mainStaffFr extends JFrame {
 				}
 			}
 		});
-		lblSignout.setOpaque(true);
-		lblSignout.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblSignout.setBounds(817, 6, 59, 25);
-		panelBillDetail.add(lblSignout);
+		btnShopeepay.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnShopeepay.setActionCommand("");
+		btnShopeepay.setBounds(10, 510, 357, 52);
+		panel_TotalBill.add(btnShopeepay);
 		
-		JLabel lblIBillIcon = new JLabel("");
-		lblIBillIcon.setIcon(new ImageIcon("D:\\JavaWorkSpace\\CircleKAppDemo\\src\\Img\\image.loginframe.png"));
-		lblIBillIcon.setBounds(39, 6, 303, 100);
-		panelTotalBill.add(lblIBillIcon);
-		
-		JLabel lblCash = new JLabel("CASH", SwingConstants.CENTER);
-		lblCash.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				panelPayment.setVisible(false);
-			}
-		});
-		lblCash.setOpaque(true);
-		lblCash.setForeground(Color.WHITE);
-		lblCash.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblCash.setBackground(new Color(64, 0, 127));
-		lblCash.setBounds(27, 20, 135, 50);
-		panelPayment.add(lblCash);
-		
-		JLabel lblPayment = new JLabel("PAYMENT",SwingConstants.CENTER);
-		lblPayment.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				panelPayment.setVisible(true);
-			}
-		});
-		lblPayment.setOpaque(true);
-		lblPayment.setForeground(new Color(255, 255, 255));
-		lblPayment.setBackground(new Color(64, 0, 127));
-		lblPayment.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblPayment.setBounds(132, 620, 135, 50);
-		panelTotalBill.add(lblPayment);
-		
-		JLabel lblTotalPrice = new JLabel("Total:");
-		lblTotalPrice.setBounds(10, 368, 360, 25);
-		panelTotalBill.add(lblTotalPrice);
-		lblTotalPrice.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		
-		JLabel lblDiscountClicked = new JLabel("DISCOUNT", SwingConstants.CENTER);
-		lblDiscountClicked.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				panelDiscount.setVisible(true);
-			}
-		});
-		lblDiscountClicked.setOpaque(true);
-		lblDiscountClicked.setForeground(Color.WHITE);
-		lblDiscountClicked.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblDiscountClicked.setBackground(new Color(64, 0, 127));
-		lblDiscountClicked.setBounds(238, 302, 102, 25);
-		panelTotalBill.add(lblDiscountClicked);
-		
-		JLabel lblCreditCard = new JLabel("CREDIT CARD", SwingConstants.CENTER);
-		lblCreditCard.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				panelPayment.setVisible(false);
-			}
-		});
-		lblCreditCard.setOpaque(true);
-		lblCreditCard.setForeground(Color.WHITE);
-		lblCreditCard.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblCreditCard.setBackground(new Color(64, 0, 127));
-		lblCreditCard.setBounds(27, 81, 135, 50);
-		panelPayment.add(lblCreditCard);
-		
-		JLabel lblShopeepay = new JLabel("SHOPEEPAY", SwingConstants.CENTER);
-		lblShopeepay.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				panelPayment.setVisible(false);
-			}
-		});
-		lblShopeepay.setOpaque(true);
-		lblShopeepay.setForeground(Color.WHITE);
-		lblShopeepay.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblShopeepay.setBackground(new Color(64, 0, 127));
-		lblShopeepay.setBounds(27, 142, 135, 50);
-		panelPayment.add(lblShopeepay);
-		
-		JLabel lblVnpay = new JLabel("VNPAY", SwingConstants.CENTER);
-		lblVnpay.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				panelPayment.setVisible(false);
-			}
-		});
-		lblVnpay.setOpaque(true);
-		lblVnpay.setForeground(Color.WHITE);
-		lblVnpay.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblVnpay.setBackground(new Color(64, 0, 127));
-		lblVnpay.setBounds(194, 142, 135, 50);
-		panelPayment.add(lblVnpay);
-		
-		JLabel lblZalopay = new JLabel("ZALOPAY", SwingConstants.CENTER);
-		lblZalopay.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				panelPayment.setVisible(false);
-			}
-		});
-		lblZalopay.setOpaque(true);
-		lblZalopay.setForeground(Color.WHITE);
-		lblZalopay.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblZalopay.setBackground(new Color(64, 0, 127));
-		lblZalopay.setBounds(194, 81, 135, 50);
-		panelPayment.add(lblZalopay);
-		
-		JLabel lblMomo = new JLabel("MOMO", SwingConstants.CENTER);
-		lblMomo.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				panelPayment.setVisible(false);
-			}
-		});
-		lblMomo.setOpaque(true);
-		lblMomo.setForeground(Color.WHITE);
-		lblMomo.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblMomo.setBackground(new Color(64, 0, 127));
-		lblMomo.setBounds(194, 20, 135, 50);
-		panelPayment.add(lblMomo);
-		
-		JLabel lblCustomerid = new JLabel("CustomerID:");
-		lblCustomerid.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblCustomerid.setBounds(10, 206, 325, 25);
-		panelTotalBill.add(lblCustomerid);
+		JLabel lblIMG = new JLabel("");
+		lblIMG.setIcon(new ImageIcon("D:\\JavaWorkSpace\\CircleKAppDemo\\src\\Img\\image.loginframe.png"));
+		lblIMG.setBounds(39, 6, 303, 100);
+		panel_TotalBill.add(lblIMG);
 		
 		JPanel panelProduct = new JPanel();
-		panelProduct.setBounds(0, 446, 876, 235);
+		panelProduct.setBounds(0, 446, 876, 191);
 		contentPane.add(panelProduct);
 		panelProduct.setLayout(null);
 		
 		JScrollPane scrollPane_3 = new JScrollPane();
-		scrollPane_3.setBounds(0, 28, 876, 207);
+		scrollPane_3.setBounds(0, 28, 876, 161);
 		panelProduct.add(scrollPane_3);
 		
 		tableProduct = new JTable();
@@ -626,7 +475,7 @@ public class mainStaffFr extends JFrame {
 					}else{
 						
 						if(checkTrungID_bd()==true) {
-							JOptionPane.showMessageDialog(null, "Sản phẩm đã được chợn!");
+							JOptionPane.showMessageDialog(null, "Sản phẩm đã được chọn!");
 							return;
 						}else{
 							int tPrice = quantity*Integer.parseInt(price);
@@ -644,9 +493,12 @@ public class mainStaffFr extends JFrame {
 								
 								Connection cn = DBConnection.getConnection();
 								
-								String query = "insert into BillDetail(ID,NamePr,cateID,Price,Quantity,totalPrice) values("+ id +",N'"+ name +"',"+ cateid +","+ price +","+ quantity +","+tPrice+")";
-								PreparedStatement ps = cn.prepareStatement(query);
-								ps.executeUpdate();
+								String query1 = "insert into BillDetail(ID,NamePr,cateID,Price,Quantity,totalPrice) values("+ id +",N'"+ name +"',"+ cateid +","+ price +","+ quantity +","+tPrice+")";
+								String query2 = "insert into details(ID,NamePr,Price,Quantity,totalPrice,billID) values("+ id +",N'"+ name +"',"+ price +","+ quantity +","+ tPrice +","+ randomNumb +")";
+								PreparedStatement ps1 = cn.prepareStatement(query1);
+								PreparedStatement ps2 = cn.prepareStatement(query2);
+								ps1.executeUpdate();
+								ps2.executeUpdate();
 							} catch (SQLException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
@@ -679,25 +531,6 @@ public class mainStaffFr extends JFrame {
 		lblID.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		textField_FindID = new JTextField();
-		textField_FindID.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-					if(textField_FindID.getText().equals("")) {
-						JOptionPane.showMessageDialog(null,"Chưa nhập ID sản phẩm!");
-						textField_FindID.requestFocus();
-						return;
-					}else {
-						id = Integer.parseInt(textField_FindID.getText());
-						if(checkTrungID_Pr() == false) {
-							JOptionPane.showMessageDialog(null, "ID sản phẩm không tồn tại!");
-						}else {
-							showDataProduct();
-						}
-					}	
-				}
-			}
-		});
 		textField_FindID.setBounds(35, 0, 288, 25);
 		panelProduct.add(textField_FindID);
 		textField_FindID.setColumns(10);
@@ -735,6 +568,23 @@ public class mainStaffFr extends JFrame {
 			String query = "select * from dbo.[billDetail] where id = ? ";
 			PreparedStatement ps = cn.prepareStatement(query);
 			ps.setString(1, textField_FindID.getText());
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				return true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	private boolean checkBD() {	
+		try {
+			Connection cn = DBConnection.getConnection();
+			
+			String query = "select * from dbo.[billDetail]";
+			PreparedStatement ps = cn.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				return true;
