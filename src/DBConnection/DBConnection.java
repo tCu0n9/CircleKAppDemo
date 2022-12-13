@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DBConnection {
 	public static Connection getConnection() {
-		final String serverName = "DESKTOP-CONGMIN";
+		final String serverName = "DESKTOP-HO9E331";
 		final String dbName = "CircleK";
 		final String username = "sa";
 		final String password = "123456";

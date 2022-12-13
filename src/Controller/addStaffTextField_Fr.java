@@ -54,7 +54,7 @@ import javax.swing.JRadioButtonMenuItem;
 
 
 
-public class addStaffTextField_Fr extends JFrame {
+public class addStaffTextField_Fr extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
 	private JTextField textField_Name;
@@ -161,11 +161,18 @@ public class addStaffTextField_Fr extends JFrame {
 		rdbtnManager = new JRadioButton("Manager");
 		rdbtnManager.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		rdbtnManager.setBounds(227, 301, 103, 21);
+		rdbtnManager.addActionListener(this);
 		contentPane.add(rdbtnManager);
 		
 		rdbtnStaff = new JRadioButton("Staff");
+		rdbtnStaff.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				
+			}
+		});
 		rdbtnStaff.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		rdbtnStaff.setBounds(347, 301, 103, 21);
+		rdbtnStaff.addActionListener(this);
 		contentPane.add(rdbtnStaff);
 		
 		textField_PhoneNumb = new JTextField();
@@ -276,10 +283,8 @@ public class addStaffTextField_Fr extends JFrame {
 				}else {
 					if(e.getSource()==rdbtnManager) {
 						pst = "Manager";
-						bit = "1";
 					}else if(e.getSource()==rdbtnStaff){
 						pst = "Staff";
-						bit = "0";
 					}
 					
 					ArrayList<Staff> list = new ArrayList<>();
@@ -303,7 +308,12 @@ public class addStaffTextField_Fr extends JFrame {
 						s.getUserName(),
 						s.getPwd(),
 						s.getPosition(),
-				});
+				});bit = "";
+					if(rdbtnManager.isSelected()) {
+						bit = "1";
+					}else if(rdbtnStaff.isSelected()){
+						bit = "0";
+					}
 					
 					try {
 						Connection cn = DBConnection.getConnection();
@@ -316,23 +326,25 @@ public class addStaffTextField_Fr extends JFrame {
 						String UserName = textField_UserName.getText();
 						String psw = textField_Password.getText();
 						
-						String query = "insert into Employees(EmpID,EmpName,BoD,EmpAddress,PhoneNum,Username,pw,position) values "
-								+ "("+ id  +",N'"+ EmpName +"','"+ BoD +"',N'"+ Address +"','"+ PhoneNumb +"','"+ UserName +"','"+ psw +"','"+ bit +"')";
+						//String query = "insert into Employees(EmpID,EmpName,BoD,EmpAddress,PhoneNum,Username,pw,position) values "
+								//+ "("+ id  +",N'"+ EmpName +"','"+ BoD +"',N'"+ Address +"','"+ PhoneNumb +"','"+ UserName +"','"+ psw +"','"+ bit +"')";
+						
+						String query = "insert into Employees(EmpID,EmpName,BoD,EmpAddress,PhoneNum,Username,pw,position) values (?,?,?,?,?,?,?,?)";
 						PreparedStatement ps = cn.prepareStatement(query);
-						/*ps.setString(1, textField_ID.getText());
+						ps.setString(1, textField_ID.getText());
 						ps.setString(2, textField_Name.getText());
 						ps.setString(3, textField_BoD.getText());
 						ps.setString(4, textField_Address.getText());
 						ps.setString(5, textField_PhoneNumb.getText());
 						ps.setString(6, textField_UserName.getText());
 						ps.setString(7, textField_Password.getText());
-						ps.setString(8, bit);*/
+						ps.setString(8, bit);
 						ps.executeUpdate();
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					
+					mainManagerFr_Ver2.showDataStaff();
 				}
 				
 				/*Staff st = getModel();
@@ -394,5 +406,11 @@ public class addStaffTextField_Fr extends JFrame {
 		ButtonGroup gr = new ButtonGroup();
 		gr.add(rdbtnStaff);
 		gr.add(rdbtnManager);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
