@@ -62,7 +62,7 @@ public class mainStaffFr extends JFrame {
 	private int totalItem;
 	private static int vat;
 	private static int total;
-	private int randomNumb;
+	private int billID;
 
 	/**
 	 * Launch the application.
@@ -260,8 +260,8 @@ public class mainStaffFr extends JFrame {
 		panel_TotalBill.add(lblStaffID);
 		lblStaffID.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		
-		randomNumb = generateNumber();
-		JLabel lblBillID = new JLabel("Bill ID: "+ randomNumb);
+		billID = generateNumber();
+		JLabel lblBillID = new JLabel("Bill ID: "+ billID);
 		lblBillID.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		lblBillID.setBounds(10, 172, 170, 25);
 		panel_TotalBill.add(lblBillID);
@@ -359,13 +359,10 @@ public class mainStaffFr extends JFrame {
 					if(checkBD() == false) {
 						JOptionPane.showMessageDialog(null, "Chưa có mặt hàng!");
 					}else {
-						randomNumb = generateNumber();
-						lblBillID.setText("Bill ID: "+ randomNumb);
-						
 						try {
 							Connection cn = DBConnection.getConnection();
 							
-							String query = "insert into bill(billID,price, billDate,empID) values("+ randomNumb +","+ totalPr +",'"+ time +"',"+EmpID+")";
+							String query = "insert into bill(billID,price, billDate,empID) values("+ billID +","+ totalPr +",'"+ time +"',"+EmpID+")";
 							PreparedStatement ps = cn.prepareStatement(query);
 							ps.executeUpdate();
 						} catch (SQLException e1) {
@@ -384,6 +381,9 @@ public class mainStaffFr extends JFrame {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
+						
+						billID = generateNumber();
+						lblBillID.setText("Bill ID: "+ billID);
 						
 						lblSubtotal.setText("Subtotal: ");
 						lblVat.setText("VAT 8%: ");
@@ -494,7 +494,7 @@ public class mainStaffFr extends JFrame {
 								Connection cn = DBConnection.getConnection();
 								
 								String query1 = "insert into BillDetail(ID,NamePr,cateID,Price,Quantity,totalPrice) values("+ id +",N'"+ name +"',"+ cateid +","+ price +","+ quantity +","+tPrice+")";
-								String query2 = "insert into details(ID,NamePr,Price,Quantity,totalPrice,billID) values("+ id +",N'"+ name +"',"+ price +","+ quantity +","+ tPrice +","+ randomNumb +")";
+								String query2 = "insert into details(ID,NamePr,Price,Quantity,totalPrice,billID) values("+ id +",N'"+ name +"',"+ price +","+ quantity +","+ tPrice +","+ billID +")";
 								PreparedStatement ps1 = cn.prepareStatement(query1);
 								PreparedStatement ps2 = cn.prepareStatement(query2);
 								ps1.executeUpdate();
