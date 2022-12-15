@@ -10,6 +10,7 @@ import DBConnection.DBConnection;
 import View.mainManagerFr_Ver2;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.JTextField;
@@ -20,6 +21,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class show_update_RowDataProduct_Fr extends JFrame {
 
@@ -54,7 +59,7 @@ public class show_update_RowDataProduct_Fr extends JFrame {
 	 */
 	public show_update_RowDataProduct_Fr() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 500, 500);
+		setBounds(100, 100, 500, 465);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -114,24 +119,78 @@ public class show_update_RowDataProduct_Fr extends JFrame {
 		contentPane.add(textField_PrName);
 		
 		textField_SuppID = new JTextField();
+		textField_SuppID.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				char k=e.getKeyChar();
+				
+				if(Character.isLetter(k)) {
+					JOptionPane.showMessageDialog(null, "Chỉ nhập số!!");
+					textField_SuppID.setText(null);
+					textField_SuppID.requestFocus();
+				}
+			}
+		});
 		textField_SuppID.setFont(new Font("Monospaced", Font.BOLD, 14));
 		textField_SuppID.setColumns(10);
 		textField_SuppID.setBounds(166, 118, 225, 30);
 		contentPane.add(textField_SuppID);
 		
 		textField_CateID = new JTextField();
+		textField_CateID.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				char k=e.getKeyChar();
+				
+				if(Character.isLetter(k)) {
+					JOptionPane.showMessageDialog(null, "Chỉ nhập số!!");
+					textField_CateID.setText(null);
+					textField_CateID.requestFocus();
+				}
+			}
+		});
 		textField_CateID.setFont(new Font("Monospaced", Font.BOLD, 14));
 		textField_CateID.setColumns(10);
 		textField_CateID.setBounds(166, 158, 225, 30);
 		contentPane.add(textField_CateID);
 		
 		textField_MFG = new JTextField();
+		textField_MFG.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				String time = textField_MFG.getText();
+				String reg = "\\d{4}[-]\\d{1,2}[-]\\d{1,2}$";
+				
+				if(time.matches(reg)) {
+				}
+				else {
+					JOptionPane.showMessageDialog(null,"Sai định dạng thời gian (yyyy-mm-dd)!");
+					textField_MFG.requestFocus();
+					return;
+				}
+			}
+		});
 		textField_MFG.setFont(new Font("Monospaced", Font.BOLD, 14));
 		textField_MFG.setColumns(10);
 		textField_MFG.setBounds(166, 198, 225, 30);
 		contentPane.add(textField_MFG);
 		
 		textField_EXP = new JTextField();
+		textField_EXP.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				String time = textField_EXP.getText();
+				String reg = "\\d{4}[-]\\d{1,2}[-]\\d{1,2}$";
+				
+				if(time.matches(reg)) {
+				}
+				else {
+					JOptionPane.showMessageDialog(null,"Sai định dạng thời gian (yyyy-mm-dd)!");
+					textField_EXP.requestFocus();
+					return;
+				}
+			}
+		});
 		textField_EXP.setFont(new Font("Monospaced", Font.BOLD, 14));
 		textField_EXP.setColumns(10);
 		textField_EXP.setBounds(166, 238, 225, 30);
@@ -144,6 +203,18 @@ public class show_update_RowDataProduct_Fr extends JFrame {
 		contentPane.add(textField_Unit);
 		
 		textField_Price = new JTextField();
+		textField_Price.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				char c = e.getKeyChar();
+				
+				if(Character.isLetter(c)) {
+					JOptionPane.showMessageDialog(null, "Chỉ nhập số!!");
+					textField_Price.setText(null);
+					textField_Price.requestFocus();
+				}
+			}
+		});
 		textField_Price.setFont(new Font("Monospaced", Font.BOLD, 14));
 		textField_Price.setColumns(10);
 		textField_Price.setBounds(166, 318, 225, 30);
@@ -164,7 +235,7 @@ public class show_update_RowDataProduct_Fr extends JFrame {
 					String unit = textField_Unit.getText();
 					String price = textField_Price.getText();
 					
-					String query = "UPDATE Product SET id = N'" + prname + "', Supid = "+ suppid +", cateID = "+ cateid +", MFG = '"+ mfg +"', EXP = '"+ exp +"', unit ='"+ unit +"', price ='"+ price +"' WHERE ID = "+ prid +"";
+					String query = "UPDATE Product SET name = N'" + prname + "', Supid = "+ suppid +", cateID = "+ cateid +", MFG = '"+ mfg +"', EXP = '"+ exp +"', unit ='"+ unit +"', price ='"+ price +"' WHERE ID = "+ prid +"";
 				
 					PreparedStatement ps = cn.prepareStatement(query);
 					

@@ -66,7 +66,7 @@ public class addCustomerTextField_Fr extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	//trùng dữ liệu
+
 	private boolean checkTrungID() {
 		
 		

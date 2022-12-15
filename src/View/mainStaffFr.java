@@ -46,6 +46,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Label;
 import java.awt.Button;
+import java.awt.SystemColor;
+import javax.swing.border.LineBorder;
+import javax.swing.border.BevelBorder;
 
 public class mainStaffFr extends JFrame {
 
@@ -72,7 +75,11 @@ public class mainStaffFr extends JFrame {
 			public void run() {
 				try {
 					mainStaffFr frame = new mainStaffFr();
+					frame.setTitle("Circle K App");
 					frame.setVisible(true);
+					
+					ImageIcon img = new ImageIcon("D:\\JavaWorkSpace\\CircleKAppDemo\\src\\Img\\logo.selectionTab.png");
+					frame.setIconImage(img.getImage());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -186,12 +193,12 @@ public class mainStaffFr extends JFrame {
 		contentPane.setLayout(null);
 		
 		JPanel panel_BillDetail = new JPanel();
-		panel_BillDetail.setBounds(0, 0, 876, 436);
+		panel_BillDetail.setBounds(10, 10, 866, 426);
 		contentPane.add(panel_BillDetail);
 		panel_BillDetail.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(0, 43, 876, 393);
+		scrollPane.setBounds(0, 43, 866, 383);
 		panel_BillDetail.add(scrollPane);
 		
 		table_BillDetail = new JTable();
@@ -212,7 +219,8 @@ public class mainStaffFr extends JFrame {
 		scrollPane.setViewportView(table_BillDetail);
 		
 		JPanel panel_TotalBill = new JPanel();
-		panel_TotalBill.setBounds(884, 0, 380, 637);
+		panel_TotalBill.setBorder(new LineBorder(new Color(255, 127, 39)));
+		panel_TotalBill.setBounds(884, 10, 372, 618);
 		contentPane.add(panel_TotalBill);
 		panel_TotalBill.setLayout(null);
 		
@@ -277,6 +285,7 @@ public class mainStaffFr extends JFrame {
 		textField.setColumns(10);
 		
 		JButton btnDelete = new JButton("Delete");
+		btnDelete.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		btnDelete.setBounds(10, 6, 104, 30);
 		panel_BillDetail.add(btnDelete);
 		btnDelete.addActionListener(new ActionListener() {
@@ -317,6 +326,7 @@ public class mainStaffFr extends JFrame {
 		btnDelete.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		JButton btnClean = new JButton("Clear");
+		btnClean.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		btnClean.setBounds(121, 6, 114, 30);
 		panel_BillDetail.add(btnClean);
 		btnClean.addActionListener(new ActionListener() {
@@ -346,6 +356,7 @@ public class mainStaffFr extends JFrame {
 		btnClean.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		JButton btnCash = new JButton("Payment");
+		btnCash.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		btnCash.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -397,16 +408,18 @@ public class mainStaffFr extends JFrame {
 		});
 		btnCash.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnCash.setActionCommand("");
-		btnCash.setBounds(10, 448, 170, 52);
+		btnCash.setBounds(10, 455, 170, 52);
 		panel_TotalBill.add(btnCash);
 		
 		JButton btnDiscount = new JButton("Discount");
+		btnDiscount.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		btnDiscount.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnDiscount.setActionCommand("");
-		btnDiscount.setBounds(197, 448, 170, 52);
+		btnDiscount.setBounds(197, 455, 170, 52);
 		panel_TotalBill.add(btnDiscount);
 		
 		JButton btnShopeepay = new JButton("Sign out");
+		btnShopeepay.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		btnShopeepay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(JOptionPane.showConfirmDialog(null, "Are you sure you want to sign out?") == 0) {
@@ -418,7 +431,7 @@ public class mainStaffFr extends JFrame {
 		});
 		btnShopeepay.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnShopeepay.setActionCommand("");
-		btnShopeepay.setBounds(10, 510, 357, 52);
+		btnShopeepay.setBounds(10, 525, 357, 52);
 		panel_TotalBill.add(btnShopeepay);
 		
 		JLabel lblIMG = new JLabel("");
@@ -426,8 +439,18 @@ public class mainStaffFr extends JFrame {
 		lblIMG.setBounds(39, 6, 303, 100);
 		panel_TotalBill.add(lblIMG);
 		
+		JPanel panel = new JPanel();
+		panel.setBackground(new Color(255, 127, 39));
+		panel.setBounds(0, 609, 388, 10);
+		panel_TotalBill.add(panel);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBackground(new Color(236, 41, 52));
+		panel_1.setBounds(0, 599, 388, 10);
+		panel_TotalBill.add(panel_1);
+		
 		JPanel panelProduct = new JPanel();
-		panelProduct.setBounds(0, 446, 876, 191);
+		panelProduct.setBounds(10, 446, 866, 191);
 		contentPane.add(panelProduct);
 		panelProduct.setLayout(null);
 		
@@ -446,84 +469,6 @@ public class mainStaffFr extends JFrame {
 		));
 		scrollPane_3.setViewportView(tableProduct);
 		
-		JButton btnAdd = new JButton("Add");
-		btnAdd.addMouseListener(new MouseAdapter() {
-			private billDetail bd;
-
-			public void mouseClicked(MouseEvent e) {
-				show_update_RowDataProduct_Fr jtableProdcutRowdata = new show_update_RowDataProduct_Fr();
-				
-				int index = tableProduct.getSelectedRow();
-				if(index == -1) {
-					JOptionPane.showMessageDialog(null, "Chưa chọn mặt hàng !");
-				}else {
-					TableModel model = tableProduct.getModel();
-					String id = model.getValueAt(index, 0).toString();
-					String name = model.getValueAt(index, 1).toString();
-					String supid = model.getValueAt(index, 2).toString();
-					String cateid = model.getValueAt(index, 3).toString();
-					String mfg = model.getValueAt(index, 4).toString();
-					String exp = model.getValueAt(index, 5).toString();
-					String unit = model.getValueAt(index, 6).toString();
-					String price = model.getValueAt(index, 7).toString();
-					
-					int quantity = Integer.parseInt(JOptionPane.showInputDialog("Quantity"));
-					if(quantity == -1) {
-						JOptionPane.showMessageDialog(null, "Chưa nhập só lượng !");
-					}else if(quantity == 0 ) {
-						JOptionPane.showMessageDialog(null, "Só lượng không hợp lệ!");
-					}else{
-						
-						if(checkTrungID_bd()==true) {
-							JOptionPane.showMessageDialog(null, "Sản phẩm đã được chọn!");
-							return;
-						}else{
-							int tPrice = quantity*Integer.parseInt(price);
-							ArrayList<billDetail> list = new ArrayList<>();
-							bd = new billDetail();
-							bd.setId(Integer.parseInt(id));
-							bd.setPrName(name);
-							bd.setCateID(Integer.parseInt(cateid));
-							bd.setPrice(Integer.parseInt(price));
-							bd.setQuantity(quantity);
-							bd.setTotalPrice(quantity,Integer.parseInt(price));
-							list.add(bd);
-							
-							try {
-								
-								Connection cn = DBConnection.getConnection();
-								
-								String query1 = "insert into BillDetail(ID,NamePr,cateID,Price,Quantity,totalPrice) values("+ id +",N'"+ name +"',"+ cateid +","+ price +","+ quantity +","+tPrice+")";
-								String query2 = "insert into details(ID,NamePr,Price,Quantity,totalPrice,billID) values("+ id +",N'"+ name +"',"+ price +","+ quantity +","+ tPrice +","+ billID +")";
-								PreparedStatement ps1 = cn.prepareStatement(query1);
-								PreparedStatement ps2 = cn.prepareStatement(query2);
-								ps1.executeUpdate();
-								ps2.executeUpdate();
-							} catch (SQLException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-							Showdulieu();
-							
-							BDtotal();
-							bdVAT();
-							totalPr(total, vat);
-							totalItem();
-							
-							lblSubtotal.setText("Subtotal: "+ total + " VNĐ");
-							lblVat.setText("VAT 8%: "+ vat +" VNĐ");
-							lblTotalPrice.setText("Total: "+ totalPr +" VNĐ");
-							lblTotalItem.setText("Total Item: "+totalItem);
-						}						
-					}
-				}	
-			}
-		});
-		btnAdd.setBackground(new Color(240, 240, 240));
-		btnAdd.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnAdd.setBounds(438, 0, 95, 25);
-		panelProduct.add(btnAdd);
-		
 		JLabel lblID = new JLabel("ID");
 		lblID.setBounds(0, 0, 37, 25);
 		panelProduct.add(lblID);
@@ -536,6 +481,7 @@ public class mainStaffFr extends JFrame {
 		textField_FindID.setColumns(10);
 		
 		JButton btnFind = new JButton("Find");
+		btnFind.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		btnFind.setBounds(333, 0, 95, 25);
 		panelProduct.add(btnFind);
 		btnFind.addMouseListener(new MouseAdapter() {
@@ -556,6 +502,87 @@ public class mainStaffFr extends JFrame {
 			}
 		});
 		btnFind.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		
+		JButton btnAdd_1 = new JButton("Add");
+		btnAdd_1.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		btnAdd_1.addMouseListener(new MouseAdapter() {
+			private billDetail bd;
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				show_update_RowDataProduct_Fr jtableProdcutRowdata = new show_update_RowDataProduct_Fr();
+				
+				int index = tableProduct.getSelectedRow();
+				if(index == -1) {
+					JOptionPane.showMessageDialog(null, "Chưa chọn mặt hàng !");
+				}else {
+					TableModel model = tableProduct.getModel();
+					String id = model.getValueAt(index, 0).toString();
+					String name = model.getValueAt(index, 1).toString();
+					String supid = model.getValueAt(index, 2).toString();
+					String cateid = model.getValueAt(index, 3).toString();
+					String mfg = model.getValueAt(index, 4).toString();
+					String exp = model.getValueAt(index, 5).toString();
+					String unit = model.getValueAt(index, 6).toString();
+					String price = model.getValueAt(index, 7).toString();
+					
+					try {
+						int quantity = Integer.parseInt(JOptionPane.showInputDialog("Quantity"));
+						if(quantity == 0 ) {
+							JOptionPane.showMessageDialog(null, "Só lượng không hợp lệ!");
+						}else{
+							
+							if(checkTrungID_bd()==true) {
+								JOptionPane.showMessageDialog(null, "Sản phẩm đã được chọn!");
+								return;
+							}else{
+								int tPrice = quantity*Integer.parseInt(price);
+								ArrayList<billDetail> list = new ArrayList<>();
+								bd = new billDetail();
+								bd.setId(Integer.parseInt(id));
+								bd.setPrName(name);
+								bd.setCateID(Integer.parseInt(cateid));
+								bd.setPrice(Integer.parseInt(price));
+								bd.setQuantity(quantity);
+								bd.setTotalPrice(quantity,Integer.parseInt(price));
+								list.add(bd);
+								
+								try {
+									
+									Connection cn = DBConnection.getConnection();
+									
+									String query1 = "insert into BillDetail(ID,NamePr,cateID,Price,Quantity,totalPrice) values("+ id +",N'"+ name +"',"+ cateid +","+ price +","+ quantity +","+tPrice+")";
+									String query2 = "insert into details(ID,NamePr,Price,Quantity,totalPrice,billID) values("+ id +",N'"+ name +"',"+ price +","+ quantity +","+ tPrice +","+ billID +")";
+									PreparedStatement ps1 = cn.prepareStatement(query1);
+									PreparedStatement ps2 = cn.prepareStatement(query2);
+									ps1.executeUpdate();
+									ps2.executeUpdate();
+								} catch (SQLException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+								Showdulieu();
+								
+								BDtotal();
+								bdVAT();
+								totalPr(total, vat);
+								totalItem();
+								
+								lblSubtotal.setText("Subtotal: "+ total + " VNĐ");
+								lblVat.setText("VAT 8%: "+ vat +" VNĐ");
+								lblTotalPrice.setText("Total: "+ totalPr +" VNĐ");
+								lblTotalItem.setText("Total Item: "+totalItem);
+							}						
+						}
+					} catch (Exception e2) {
+						JOptionPane.showMessageDialog(null, "Hãy nhập số lượng chính xác!");
+					}
+				}	
+			}
+		});
+		btnAdd_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnAdd_1.setBounds(432, 0, 95, 25);
+		panelProduct.add(btnAdd_1);
 		
 		ImageIcon img = new ImageIcon("D:\\JavaWorkSpace\\CircleKApp\\src\\Img\\download.png");
 		setIconImage(img.getImage());

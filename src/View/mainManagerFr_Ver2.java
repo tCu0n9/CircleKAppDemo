@@ -54,11 +54,15 @@ import java.util.Vector;
 import org.ietf.jgss.Oid;
 
 import Controller.addStaffTextField_Fr;
+import Controller.addSuppTextField_Fr;
 import Controller.findDataStaff_Fr;
 import Controller.showDetailsBill_Fr;
+import Controller.show_update_RowDataCategory_Fr;
 import Controller.show_update_RowDataCustomer_Fr;
 import Controller.show_update_RowDataProduct_Fr;
 import Controller.show_update_RowDataStaff_Fr;
+import Controller.show_update_RowDataSupplier_Fr;
+import Controller.addCategoryTextField_Fr;
 import Controller.addCustomerTextField_Fr;
 import Controller.addProductsTextField_Fr;
 import DBConnection.DBConnection;
@@ -128,7 +132,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 			
 			Connection cn = DBConnection.getConnection();
 			
-			String query = "select * from dbo.[Product]";
+			String query = "select * from dbo.[Product] order by id ASC";
 			PreparedStatement ps = cn.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			
@@ -162,7 +166,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 			
 			Connection cn = DBConnection.getConnection();
 			
-			String query = "select * from dbo.[Employees]";
+			String query = "select * from dbo.[Employees] order by Empid ASC ";
 			PreparedStatement ps = cn.prepareStatement(query);
 			
 			ResultSet rs = ps.executeQuery();
@@ -202,7 +206,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 			
 			Connection cn = DBConnection.getConnection();
 			
-			String query = "select * from dbo.Customer";
+			String query = "select * from dbo.Customer order by CustomerID ASC";
 			PreparedStatement ps = cn.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
@@ -226,7 +230,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 		
 		Connection cn = DBConnection.getConnection();
 		
-		String query = "select * from dbo.supplier";
+		String query = "select * from dbo.supplier order by Supid ASC";
 		PreparedStatement ps;
 		try {
 			ps = cn.prepareStatement(query);
@@ -253,7 +257,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 		
 		Connection cn = DBConnection.getConnection();
 		
-		String query = "select * from dbo.category";
+		String query = "select * from dbo.category order by CategoryID ASC";
 		PreparedStatement ps;
 		try {
 			ps = cn.prepareStatement(query);
@@ -598,16 +602,6 @@ public class mainManagerFr_Ver2 extends JFrame {
 				"ID", "Name", "Supplier ID", "Category ID", "MFG", "EXP", "Unit", "Price"
 			}
 		));
-		tableProduct.getColumnModel().getColumn(0).setPreferredWidth(29);
-		tableProduct.getColumnModel().getColumn(0).setMinWidth(30);
-		tableProduct.getColumnModel().getColumn(0).setMaxWidth(30);
-		tableProduct.getColumnModel().getColumn(1).setPreferredWidth(120);
-		tableProduct.getColumnModel().getColumn(2).setPreferredWidth(65);
-		tableProduct.getColumnModel().getColumn(3).setPreferredWidth(65);
-		tableProduct.getColumnModel().getColumn(4).setPreferredWidth(90);
-		tableProduct.getColumnModel().getColumn(5).setPreferredWidth(90);
-		tableProduct.getColumnModel().getColumn(6).setPreferredWidth(90);
-		tableProduct.getColumnModel().getColumn(7).setPreferredWidth(89);
 		
 		scrollPane.setViewportView(tableProduct);
 		
@@ -617,7 +611,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				addProductsTextField_Fr frText = new addProductsTextField_Fr();
 				frText.setVisible(true);
-				frText.setBounds(100, 100, 600, 325);
+				frText.setBounds(100, 100, 600, 510);
 				frText.setLocationRelativeTo(null);
 				frText.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			}
@@ -629,48 +623,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 		lblAddPr.setBounds(10, 600, 155, 70);
 		panelProducts.add(lblAddPr);
 		
-		JLabel lblUpdatePr = new JLabel("Update", SwingConstants.CENTER);
-		lblUpdatePr.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				show_update_RowDataProduct_Fr jtableProdcutRowdata = new show_update_RowDataProduct_Fr();
-				
-				int index = tableProduct.getSelectedRow();
-				if(index == -1) {
-					JOptionPane.showMessageDialog(null, "Chưa chọn đối tượng !");
-				}else {
-					TableModel model = tableProduct.getModel();
-					String id = model.getValueAt(index, 0).toString();
-					String name = model.getValueAt(index, 1).toString();
-					String supid = model.getValueAt(index, 2).toString();
-					String cateid = model.getValueAt(index, 3).toString();
-					String mfg = model.getValueAt(index, 4).toString();
-					String exp = model.getValueAt(index, 5).toString();
-					String unit = model.getValueAt(index, 6).toString();
-					String price = model.getValueAt(index, 7).toString();
-					
-					jtableProdcutRowdata.setVisible(true);
-					jtableProdcutRowdata.setBounds(100, 100, 500, 500);
-					jtableProdcutRowdata.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				
-					jtableProdcutRowdata.textField_ID.setText(id);
-					jtableProdcutRowdata.textField_PrName.setText(name);
-					jtableProdcutRowdata.textField_SuppID.setText(supid);
-					jtableProdcutRowdata.textField_CateID.setText(cateid);
-					jtableProdcutRowdata.textField_MFG.setText(mfg);
-					jtableProdcutRowdata.textField_EXP.setText(exp);
-					jtableProdcutRowdata.textField_Unit.setText(unit);
-					jtableProdcutRowdata.textField_Price.setText(price);
-				}	
-			}
-		});
-		lblUpdatePr.setOpaque(true);
-		lblUpdatePr.setForeground(Color.WHITE);
-		lblUpdatePr.setFont(new Font("Monospaced", Font.BOLD, 20));
-		lblUpdatePr.setBackground(new Color(236, 41, 52));
-		lblUpdatePr.setBounds(575, 600, 155, 70);
-		panelProducts.add(lblUpdatePr);
-		
+			
 		JLabel lblDeletePr = new JLabel("Delete", SwingConstants.CENTER);
 		lblDeletePr.addMouseListener(new MouseAdapter() {
 			@Override
@@ -711,6 +664,48 @@ public class mainManagerFr_Ver2 extends JFrame {
 		lblFindPr.setBackground(new Color(236, 41, 52));
 		lblFindPr.setBounds(295, 600, 155, 70);
 		panelProducts.add(lblFindPr);
+		
+		JLabel lblUpdate = new JLabel("Update", SwingConstants.CENTER);
+		lblUpdate.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				show_update_RowDataProduct_Fr jtableProdcutRowdata = new show_update_RowDataProduct_Fr();
+				
+				int index = tableProduct.getSelectedRow();
+				if(index == -1) {
+					JOptionPane.showMessageDialog(null, "Chưa chọn đối tượng !");
+				}else {
+					TableModel model = tableProduct.getModel();
+					String id = model.getValueAt(index, 0).toString();
+					String name = model.getValueAt(index, 1).toString();
+					String supid = model.getValueAt(index, 2).toString();
+					String cateid = model.getValueAt(index, 3).toString();
+					String mfg = model.getValueAt(index, 4).toString();
+					String exp = model.getValueAt(index, 5).toString();
+					String unit = model.getValueAt(index, 6).toString();
+					String price = model.getValueAt(index, 7).toString();
+					
+					jtableProdcutRowdata.setVisible(true);
+					jtableProdcutRowdata.setBounds(100, 100, 500, 500);
+					jtableProdcutRowdata.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				
+					jtableProdcutRowdata.textField_ID.setText(id);
+					jtableProdcutRowdata.textField_PrName.setText(name);
+					jtableProdcutRowdata.textField_SuppID.setText(supid);
+					jtableProdcutRowdata.textField_CateID.setText(cateid);
+					jtableProdcutRowdata.textField_MFG.setText(mfg);
+					jtableProdcutRowdata.textField_EXP.setText(exp);
+					jtableProdcutRowdata.textField_Unit.setText(unit);
+					jtableProdcutRowdata.textField_Price.setText(price);
+				}	
+			}
+		});
+		lblUpdate.setOpaque(true);
+		lblUpdate.setForeground(Color.WHITE);
+		lblUpdate.setFont(new Font("Monospaced", Font.BOLD, 20));
+		lblUpdate.setBackground(new Color(236, 41, 52));
+		lblUpdate.setBounds(583, 600, 155, 70);
+		panelProducts.add(lblUpdate);
 		
 		panelStaffs = new JPanel();
 		layeredPane.add(panelStaffs, "name_89813235964000");
@@ -769,7 +764,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 		lblUpdateStaff.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				show_update_RowDataStaff_Fr jtableProdcutRowdata = new show_update_RowDataStaff_Fr();
+				show_update_RowDataStaff_Fr jtableStaffRowdata = new show_update_RowDataStaff_Fr();
 				
 				int index = tableStaff.getSelectedRow();
 				if(index == -1) {
@@ -781,16 +776,20 @@ public class mainManagerFr_Ver2 extends JFrame {
 					String bod = model.getValueAt(index, 2).toString();
 					String address = model.getValueAt(index, 3).toString();
 					String phoneNumb = model.getValueAt(index, 4).toString();
+					String username = model.getValueAt(index, 5).toString();
+					String pass = model.getValueAt(index, 6).toString();
 					
-					jtableProdcutRowdata.setVisible(true);
-					jtableProdcutRowdata.setBounds(100, 100, 548, 325);
-					jtableProdcutRowdata.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					jtableStaffRowdata.setVisible(true);
+					jtableStaffRowdata.setBounds(100, 100, 600, 440);
+					jtableStaffRowdata.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				
-					jtableProdcutRowdata.textField_ID.setText(id);
-					jtableProdcutRowdata.textField_Name.setText(fullname);
-					jtableProdcutRowdata.textField_BoD.setText(bod);
-					jtableProdcutRowdata.textField_Address.setText(address);
-					jtableProdcutRowdata.textField_PhoneNumb.setText(phoneNumb);
+					jtableStaffRowdata.textField_ID.setText(id);
+					jtableStaffRowdata.textField_Name.setText(fullname);
+					jtableStaffRowdata.textField_BoD.setText(bod);
+					jtableStaffRowdata.textField_Address.setText(address);
+					jtableStaffRowdata.textField_PhoneNumb.setText(phoneNumb);
+					jtableStaffRowdata.textField_UserName.setText(username);
+					jtableStaffRowdata.textField_Password.setText(pass);
 				}
 			}
 		});
@@ -892,7 +891,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 		lblUpdateCus.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				show_update_RowDataCustomer_Fr jtableProdcutRowdata = new show_update_RowDataCustomer_Fr();
+				show_update_RowDataCustomer_Fr jtableCustomerRowdata = new show_update_RowDataCustomer_Fr();
 				
 				int index = tableCustomer.getSelectedRow();
 				if(index == -1) {
@@ -904,14 +903,14 @@ public class mainManagerFr_Ver2 extends JFrame {
 					String address = model.getValueAt(index, 2).toString();
 					String phoneNumb = model.getValueAt(index, 3).toString();
 					
-					jtableProdcutRowdata.setVisible(true);
-					jtableProdcutRowdata.setBounds(100, 100, 548, 325);
-					jtableProdcutRowdata.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					jtableCustomerRowdata.setVisible(true);
+					jtableCustomerRowdata.setBounds(100, 100, 548, 325);
+					jtableCustomerRowdata.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				
-					jtableProdcutRowdata.textField_ID.setText(id);
-					jtableProdcutRowdata.textField_Name.setText(fullname);
-					jtableProdcutRowdata.textField_Address.setText(address);
-					jtableProdcutRowdata.textField_PhoneNumb.setText(phoneNumb);
+					jtableCustomerRowdata.textField_ID.setText(id);
+					jtableCustomerRowdata.textField_Name.setText(fullname);
+					jtableCustomerRowdata.textField_Address.setText(address);
+					jtableCustomerRowdata.textField_PhoneNumb.setText(phoneNumb);
 				}
 
 			}
@@ -988,7 +987,11 @@ public class mainManagerFr_Ver2 extends JFrame {
 		lblAddSupp.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
+				addSuppTextField_Fr frTextAdd = new addSuppTextField_Fr();
+				frTextAdd.setVisible(true);
+				frTextAdd.setBounds(100, 100, 600, 325);
+				frTextAdd.setLocationRelativeTo(null);
+				frTextAdd.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			}
 		});
 		lblAddSupp.setOpaque(true);
@@ -999,6 +1002,34 @@ public class mainManagerFr_Ver2 extends JFrame {
 		panelSupplier.add(lblAddSupp);
 		
 		JLabel lblUpdateSupp = new JLabel("Update", SwingConstants.CENTER);
+		lblUpdateSupp.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				show_update_RowDataSupplier_Fr jtableSupplierRowdata = new show_update_RowDataSupplier_Fr();
+				
+				int index = tableSupplier.getSelectedRow();
+				if(index == -1) {
+					JOptionPane.showMessageDialog(null, "Chưa chọn đối tượng !");
+				}else {
+					TableModel model = tableSupplier.getModel();
+					String id = model.getValueAt(index, 0).toString();
+					String supname = model.getValueAt(index, 1).toString();
+					String ctName = model.getValueAt(index, 2).toString();
+					String address = model.getValueAt(index, 3).toString();
+					String phoneNum = model.getValueAt(index, 4).toString();
+					
+					jtableSupplierRowdata.setVisible(true);
+					jtableSupplierRowdata.setBounds(100, 100, 600, 325);
+					jtableSupplierRowdata.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				
+					jtableSupplierRowdata.txtSupplier.setText(id);
+					jtableSupplierRowdata.txtSupplierName.setText(supname);
+					jtableSupplierRowdata.txtContactName.setText(ctName);
+					jtableSupplierRowdata.txtSupplierAddress.setText(address);
+					jtableSupplierRowdata.txtSupplierPhone.setText(phoneNum);
+				}
+			}
+		});
 		lblUpdateSupp.setOpaque(true);
 		lblUpdateSupp.setForeground(Color.WHITE);
 		lblUpdateSupp.setFont(new Font("Monospaced", Font.BOLD, 20));
@@ -1007,6 +1038,29 @@ public class mainManagerFr_Ver2 extends JFrame {
 		panelSupplier.add(lblUpdateSupp);
 		
 		JLabel lblDeleteSupp = new JLabel("Delete", SwingConstants.CENTER);
+		lblDeleteSupp.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int index = tableSupplier.getSelectedRow();
+				if(index == -1) {
+					JOptionPane.showMessageDialog(null, "Chưa chọn đối tượng !");
+				}else {
+					TableModel model = tableSupplier.getModel();
+					String id = model.getValueAt(index, 0).toString();
+					
+					try {
+						Connection cn = DBConnection.getConnection();
+						String query = "delete from dbo.[Supplier] where SupID = ?";
+						PreparedStatement ps = cn.prepareStatement(query);
+						ps.setString(1,id);
+						ps.execute();
+						showDataSupplier();
+					} catch (SQLException e1) {
+						JOptionPane.showMessageDialog(null, "Chưa xóa các mặt hàng của nhà cung cấp!");
+					}
+				}
+			}
+		});
 		lblDeleteSupp.setOpaque(true);
 		lblDeleteSupp.setForeground(Color.WHITE);
 		lblDeleteSupp.setFont(new Font("Monospaced", Font.BOLD, 20));
@@ -1042,6 +1096,16 @@ public class mainManagerFr_Ver2 extends JFrame {
 		scrollPane_3.setViewportView(tableCategory);
 		
 		JLabel lblAddCate = new JLabel("Add", SwingConstants.CENTER);
+		lblAddCate.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				addCategoryTextField_Fr frTextAdd = new addCategoryTextField_Fr();
+				frTextAdd.setVisible(true);
+				frTextAdd.setBounds(100, 100, 575, 220);
+				frTextAdd.setLocationRelativeTo(null);
+				frTextAdd.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			}
+		});
 		lblAddCate.setOpaque(true);
 		lblAddCate.setForeground(Color.WHITE);
 		lblAddCate.setFont(new Font("Monospaced", Font.BOLD, 20));
@@ -1058,6 +1122,29 @@ public class mainManagerFr_Ver2 extends JFrame {
 		panelCategory.add(lblFindCate);
 		
 		JLabel lblUpdateCate = new JLabel("Update", SwingConstants.CENTER);
+		lblUpdateCate.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				show_update_RowDataCategory_Fr jtableCategoryRowdata = new show_update_RowDataCategory_Fr();
+				
+				int index = tableCategory.getSelectedRow();
+				if(index == -1) {
+					JOptionPane.showMessageDialog(null, "Chưa chọn đối tượng !");
+				}else {
+					TableModel model = tableCategory.getModel();
+					String cateid = model.getValueAt(index, 0).toString();
+					String catename = model.getValueAt(index, 1).toString();
+					
+					jtableCategoryRowdata.setVisible(true);
+					jtableCategoryRowdata.setBounds(100, 100, 575, 220);
+					jtableCategoryRowdata.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				
+					jtableCategoryRowdata.txtCateID.setText(cateid);
+					jtableCategoryRowdata.txtCateName.setText(catename);
+
+				}
+			}
+		});
 		lblUpdateCate.setOpaque(true);
 		lblUpdateCate.setForeground(Color.WHITE);
 		lblUpdateCate.setFont(new Font("Monospaced", Font.BOLD, 20));
@@ -1066,6 +1153,29 @@ public class mainManagerFr_Ver2 extends JFrame {
 		panelCategory.add(lblUpdateCate);
 		
 		JLabel lblDeleteCate = new JLabel("Delete", SwingConstants.CENTER);
+		lblDeleteCate.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int index = tableCategory.getSelectedRow();
+				if(index == -1) {
+					JOptionPane.showMessageDialog(null, "Chưa chọn đối tượng !");
+				}else {
+					TableModel model = tableCategory.getModel();
+					String id = model.getValueAt(index, 0).toString();
+					
+					try {
+						Connection cn = DBConnection.getConnection();
+						String query = "delete from dbo.[Category] where CategoryID = ?";
+						PreparedStatement ps = cn.prepareStatement(query);
+						ps.setString(1,id);
+						ps.execute();
+						showDataCategory();
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
 		lblDeleteCate.setOpaque(true);
 		lblDeleteCate.setForeground(Color.WHITE);
 		lblDeleteCate.setFont(new Font("Monospaced", Font.BOLD, 20));
@@ -1214,6 +1324,14 @@ public class mainManagerFr_Ver2 extends JFrame {
 	
 	public static void AddRowToJTableCustomer(Object[] dataRow) {
 		DefaultTableModel model = (DefaultTableModel) tableCustomer.getModel();
+		model.addRow(dataRow);
+	}
+	public static void AddRowToJTableSupplier(Object[] dataRow) {
+		DefaultTableModel model = (DefaultTableModel) tableSupplier.getModel();
+		model.addRow(dataRow);
+	}
+	public static void AddRowToJTableCategory(Object[] dataRow) {
+		DefaultTableModel model = (DefaultTableModel) tableCategory.getModel();
 		model.addRow(dataRow);
 	}
 	

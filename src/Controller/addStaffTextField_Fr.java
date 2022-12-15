@@ -63,7 +63,6 @@ public class addStaffTextField_Fr extends JFrame implements ActionListener {
 	private JTextField textField_BoD;
 	private JTextField textField_ID;
 	private List<Staff> list;
-	StaffDAO staffDAO = new StaffDAO();
 	private JTextField textField_UserName;
 	private JTextField textField_Password;
 	private JRadioButton rdbtnManager;
@@ -74,16 +73,6 @@ public class addStaffTextField_Fr extends JFrame implements ActionListener {
 	/**
 	 * Launch the application.
 	 */
-	
-	public Staff getModel() {
-		Staff st = new Staff();
-		st.setID(Integer.parseInt(textField_ID.getText().toString().trim()));
-		st.setName(textField_Name.getText().toString().trim());
-		st.setBoD(textField_BoD.getText().toString().trim());
-		st.setAddress(textField_Address.getText().toString().trim());
-		st.setPhoneNumb(textField_PhoneNumb.getText().toString().trim());
-		return st;
-	}
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -308,7 +297,8 @@ public class addStaffTextField_Fr extends JFrame implements ActionListener {
 						s.getUserName(),
 						s.getPwd(),
 						s.getPosition(),
-				});bit = "";
+				});
+					bit = "";
 					if(rdbtnManager.isSelected()) {
 						bit = "1";
 					}else if(rdbtnStaff.isSelected()){
@@ -317,17 +307,6 @@ public class addStaffTextField_Fr extends JFrame implements ActionListener {
 					
 					try {
 						Connection cn = DBConnection.getConnection();
-						
-						int id = Integer.parseInt(textField_ID.getText());
-						String EmpName = textField_Name.getText();
-						String BoD = textField_BoD.getText();
-						String Address = textField_Address.getText();
-						String PhoneNumb = textField_PhoneNumb.getText();
-						String UserName = textField_UserName.getText();
-						String psw = textField_Password.getText();
-						
-						//String query = "insert into Employees(EmpID,EmpName,BoD,EmpAddress,PhoneNum,Username,pw,position) values "
-								//+ "("+ id  +",N'"+ EmpName +"','"+ BoD +"',N'"+ Address +"','"+ PhoneNumb +"','"+ UserName +"','"+ psw +"','"+ bit +"')";
 						
 						String query = "insert into Employees(EmpID,EmpName,BoD,EmpAddress,PhoneNum,Username,pw,position) values (?,?,?,?,?,?,?,?)";
 						PreparedStatement ps = cn.prepareStatement(query);
@@ -346,13 +325,7 @@ public class addStaffTextField_Fr extends JFrame implements ActionListener {
 					}
 					mainManagerFr_Ver2.showDataStaff();
 				}
-				
-				/*Staff st = getModel();
-				if (staffDAO.add(st)>0) {
-					JOptionPane.showMessageDialog(null, "Add new staff completed!");
-				}*/
 			}
-			
 		});
 		btnSave.setFont(new Font("Tahoma", Font.BOLD, 20));
 		btnSave.setBounds(141, 356, 105, 35);
@@ -401,7 +374,6 @@ public class addStaffTextField_Fr extends JFrame implements ActionListener {
 		lblPosition.setFont(new Font("Monospaced", Font.BOLD, 14));
 		lblPosition.setBounds(91, 297, 112, 30);
 		contentPane.add(lblPosition);
-		
 		
 		ButtonGroup gr = new ButtonGroup();
 		gr.add(rdbtnStaff);
