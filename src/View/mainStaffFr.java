@@ -476,6 +476,7 @@ public class mainStaffFr extends JFrame {
 						billID = generateNumber();
 						lblBillID.setText("Bill ID: "+ billID);
 						
+						lblDiscount.setText("Discount: ");
 						lblSubtotal.setText("Subtotal: ");
 						lblVat.setText("VAT 8%: ");
 						lblTotalPrice.setText("Total: ");
