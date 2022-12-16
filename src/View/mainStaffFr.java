@@ -3,6 +3,7 @@ package View;
 
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.EventQueue;import javax.management.Query;
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
@@ -53,19 +54,30 @@ import javax.swing.border.BevelBorder;
 public class mainStaffFr extends JFrame {
 
 	private JPanel contentPane;
+	private JPanel panel_Discount;
+	
 	private static JTable table_BillDetail;
 	private static JTable tableProduct;
+	
 	private JTextField textField_FindID;
-	private static int id;
-	@SuppressWarnings("unused")
-	private String EmpNAME;
-	private int EmpID;
 	private JTextField textField;
-	private int totalPr;
-	private int totalItem;
-	private static int vat;
-	private static int total;
+	
+	private JLabel lblDiscount;
+	private JLabel lblSubtotal;
+	private JLabel lblTotalPrice;
+	
+	private static int id;
+	private String EmpNAME;
+	private String discountName="";
 	private int billID;
+	private int EmpID;
+	private int totalItem;
+	private int vat;
+	private int total;
+	private int totalDC;
+	private int totalPr;
+	private int totalPrDC;
+	
 
 	/**
 	 * Launch the application.
@@ -218,13 +230,81 @@ public class mainStaffFr extends JFrame {
 		table_BillDetail.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		scrollPane.setViewportView(table_BillDetail);
 		
+		
 		JPanel panel_TotalBill = new JPanel();
 		panel_TotalBill.setBorder(new LineBorder(new Color(255, 127, 39)));
 		panel_TotalBill.setBounds(884, 10, 372, 618);
 		contentPane.add(panel_TotalBill);
 		panel_TotalBill.setLayout(null);
 		
-		JLabel lblDiscount = new JLabel("Discount:");
+		panel_Discount = new JPanel();
+		panel_Discount.setBackground(new Color(240, 240, 240));
+		panel_Discount.setBounds(10, 393, 352, 52);
+		panel_TotalBill.add(panel_Discount);
+		panel_Discount.setLayout(null);
+		
+		JButton btnDC25 = new JButton("DC5%");
+		btnDC25.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				lblDiscount.setText("Discount: DC5%");
+				discountName = "DC5%";
+				totalPr = getTotalPrDC(total,0.05,vat);
+				lblTotalPrice.setText("Total: "+ totalPr +" VNĐ");
+				panel_Discount.setVisible(false);
+			}
+		});
+		btnDC25.setHorizontalAlignment(SwingConstants.LEFT);
+		btnDC25.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnDC25.setBounds(10, 10, 75, 35);
+		panel_Discount.add(btnDC25);
+		
+		JButton btnDC50 = new JButton("DC10%");
+		btnDC50.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				lblDiscount.setText("Discount: DC10%");
+				discountName = "DC10%";
+				totalPr = getTotalPrDC(total,0.1,vat);
+				lblTotalPrice.setText("Total: "+ totalPr +" VNĐ");
+				panel_Discount.setVisible(false);
+			}
+		});
+		btnDC50.setHorizontalAlignment(SwingConstants.LEFT);
+		btnDC50.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnDC50.setBounds(97, 10, 75, 35);
+		panel_Discount.add(btnDC50);
+		
+		JButton btnDC75 = new JButton("DC15%");
+		btnDC75.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				lblDiscount.setText("Discount: DC15%");
+				discountName = "DC15%";
+				totalPr = getTotalPrDC(total,0.15,vat);
+				lblTotalPrice.setText("Total: "+ totalPr +" VNĐ");
+				panel_Discount.setVisible(false);
+			}
+		});
+		btnDC75.setHorizontalAlignment(SwingConstants.LEFT);
+		btnDC75.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnDC75.setBounds(182, 10, 75, 35);
+		panel_Discount.add(btnDC75);
+		
+		JButton None = new JButton("None");
+		None.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				lblDiscount.setText("Discount:");
+				discountName = "";
+				totalPr = getTotalPrDC(total,0,vat);
+				lblTotalPrice.setText("Total: "+ totalPr +" VNĐ");
+				panel_Discount.setVisible(false);
+			}
+		});
+		None.setHorizontalAlignment(SwingConstants.LEFT);
+		None.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		None.setBounds(267, 10, 75, 35);
+		panel_Discount.add(None);
+		panel_Discount.setVisible(false);
+		
+		lblDiscount = new JLabel("Discount:");
 		lblDiscount.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		lblDiscount.setBounds(10, 302, 357, 21);
 		panel_TotalBill.add(lblDiscount);
@@ -234,7 +314,7 @@ public class mainStaffFr extends JFrame {
 		lblVat.setBounds(10, 332, 357, 21);
 		panel_TotalBill.add(lblVat);
 		
-		JLabel lblTotalPrice = new JLabel("Total:");
+		lblTotalPrice = new JLabel("Total:");
 		lblTotalPrice.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		lblTotalPrice.setBounds(10, 363, 360, 25);
 		panel_TotalBill.add(lblTotalPrice);
@@ -244,7 +324,7 @@ public class mainStaffFr extends JFrame {
 		lblTotalItem.setBounds(10, 242, 357, 21);
 		panel_TotalBill.add(lblTotalItem);
 		
-		JLabel lblSubtotal = new JLabel("Subtotal:");
+		lblSubtotal = new JLabel("Subtotal:");
 		lblSubtotal.setFont(new Font("Tahoma", Font.PLAIN, 17)); 
 		lblSubtotal.setBounds(10, 272, 357, 21);
 		panel_TotalBill.add(lblSubtotal);
@@ -314,7 +394,7 @@ public class mainStaffFr extends JFrame {
 				
 				BDtotal();
 				bdVAT();
-				totalPr(total, vat);
+				totalPr = getTotalPr(total, vat);
 				totalItem();
 				
 				lblSubtotal.setText("Subtotal: "+ total + " VNĐ");
@@ -373,7 +453,7 @@ public class mainStaffFr extends JFrame {
 						try {
 							Connection cn = DBConnection.getConnection();
 							
-							String query = "insert into bill(billID,price, billDate,empID) values("+ billID +","+ totalPr +",'"+ time +"',"+EmpID+")";
+							String query = "insert into bill(billID,price,discount,billDate,empID) values("+ billID +","+ totalPr +",'"+ discountName +"','"+ time +"',"+EmpID+")";
 							PreparedStatement ps = cn.prepareStatement(query);
 							ps.executeUpdate();
 						} catch (SQLException e1) {
@@ -412,6 +492,11 @@ public class mainStaffFr extends JFrame {
 		panel_TotalBill.add(btnCash);
 		
 		JButton btnDiscount = new JButton("Discount");
+		btnDiscount.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				panel_Discount.setVisible(true);
+			}
+		});
 		btnDiscount.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		btnDiscount.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnDiscount.setActionCommand("");
@@ -439,15 +524,15 @@ public class mainStaffFr extends JFrame {
 		lblIMG.setBounds(39, 6, 303, 100);
 		panel_TotalBill.add(lblIMG);
 		
-		JPanel panel = new JPanel();
-		panel.setBackground(new Color(255, 127, 39));
-		panel.setBounds(0, 609, 388, 10);
-		panel_TotalBill.add(panel);
+		JPanel panel_cam = new JPanel();
+		panel_cam.setBackground(new Color(255, 127, 39));
+		panel_cam.setBounds(0, 609, 388, 10);
+		panel_TotalBill.add(panel_cam);
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBackground(new Color(236, 41, 52));
-		panel_1.setBounds(0, 599, 388, 10);
-		panel_TotalBill.add(panel_1);
+		JPanel panel_do = new JPanel();
+		panel_do.setBackground(new Color(236, 41, 52));
+		panel_do.setBounds(0, 599, 388, 10);
+		panel_TotalBill.add(panel_do);
 		
 		JPanel panelProduct = new JPanel();
 		panelProduct.setBounds(10, 446, 866, 191);
@@ -565,7 +650,7 @@ public class mainStaffFr extends JFrame {
 								
 								BDtotal();
 								bdVAT();
-								totalPr(total, vat);
+								totalPr = getTotalPr(total, vat);
 								totalItem();
 								
 								lblSubtotal.setText("Subtotal: "+ total + " VNĐ");
@@ -673,9 +758,12 @@ public class mainStaffFr extends JFrame {
 			e1.printStackTrace();
 		}
 	}
+	private int getTotalPr(int total, int vat) {
+		return this.total + this.vat;
+	}
 	
-	private void totalPr(int total, int vat) {
-		totalPr = this.total + this.vat;
+	private int getTotalPrDC(double total,double dc, double vat) {
+		return (int)(this.total -(this.total * dc) + this.vat);
 	}
 	
 	private void totalItem() {

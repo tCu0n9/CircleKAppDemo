@@ -278,7 +278,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 		
 		try {
 			tableCustomer.removeAll();
-			String[] arr3 = {"Bill ID", "Total Price", "Bill Date", "Staff ID"};
+			String[] arr3 = {"Bill ID", "Total Price", "Discount", "Bill Date", "Staff ID"};
 			DefaultTableModel model3 = new DefaultTableModel(arr3,0);
 			
 			Connection cn = DBConnection.getConnection();
@@ -290,6 +290,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 				Vector vector = new Vector();
 				vector.add(rs.getString("billID"));
 				vector.add(rs.getString("price"));
+				vector.add(rs.getString("discount"));
 				vector.add(rs.getString("billDate"));
 				vector.add(rs.getString("empID"));
 				model3.addRow(vector);
@@ -1197,7 +1198,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 			new Object[][] {
 			},
 			new String[] {
-				"Bill ID", "Total Price", "Bill Date", "Staff ID"
+				"Bill ID", "Total Price", "Discount", "Bill Date", "Staff ID"
 			}
 		));
 		scrollPane_4.setViewportView(tableTakings);
