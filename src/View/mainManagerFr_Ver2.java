@@ -55,6 +55,8 @@ import org.ietf.jgss.Oid;
 
 import Controller.addStaffTextField_Fr;
 import Controller.addSuppTextField_Fr;
+import Controller.calRevenueADay_Fr;
+import Controller.calRevenueDayToDay_Fr;
 import Controller.findDataStaff_Fr;
 import Controller.showDetailsBill_Fr;
 import Controller.show_update_RowDataCategory_Fr;
@@ -91,6 +93,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 	private JTextField textField_FindName;
 	
 	private String inputID;
+	private JPanel panelRevenue;
 	private static String pst;
 	public static String Billid;
 	
@@ -1233,6 +1236,64 @@ public class mainManagerFr_Ver2 extends JFrame {
 		lblShowDetails.setBackground(new Color(236, 41, 52));
 		lblShowDetails.setBounds(30, 595, 155, 70);
 		panelTakings.add(lblShowDetails);
+		
+		JLabel lblRevenue = new JLabel("Revenue", SwingConstants.CENTER);
+		lblRevenue.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				panelRevenue.setVisible(true);;
+			}
+		});
+		lblRevenue.setOpaque(true);
+		lblRevenue.setForeground(Color.WHITE);
+		lblRevenue.setFont(new Font("Monospaced", Font.BOLD, 20));
+		lblRevenue.setBackground(new Color(236, 41, 52));
+		lblRevenue.setBounds(265, 595, 155, 70);
+		panelTakings.add(lblRevenue);
+		
+		panelRevenue = new JPanel();
+		panelRevenue.setBounds(428, 591, 139, 74);
+		panelRevenue.setVisible(false);
+		panelTakings.add(panelRevenue);
+		panelRevenue.setLayout(null);
+		
+		JLabel lblADay = new JLabel("a day", SwingConstants.CENTER);
+		lblADay.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				panelRevenue.setVisible(false);
+				
+				calRevenueADay_Fr calculationFr = new calRevenueADay_Fr();
+				calculationFr.setVisible(true);
+				calculationFr.setBounds(100, 100, 470, 155);
+				calculationFr.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			}
+		});
+		lblADay.setBounds(0, 0, 138, 35);
+		lblADay.setOpaque(true);
+		lblADay.setForeground(Color.WHITE);
+		lblADay.setFont(new Font("Monospaced", Font.BOLD, 20));
+		lblADay.setBackground(new Color(255, 128, 64));
+		panelRevenue.add(lblADay);
+		
+		JLabel lblDayToDay = new JLabel("day to day", SwingConstants.CENTER);
+		lblDayToDay.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				panelRevenue.setVisible(false);
+				
+				calRevenueDayToDay_Fr calculationFr = new calRevenueDayToDay_Fr();
+				calculationFr.setVisible(true);
+				calculationFr.setBounds(100, 100, 555, 150);
+				calculationFr.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			}
+		});
+		lblDayToDay.setOpaque(true);
+		lblDayToDay.setForeground(Color.WHITE);
+		lblDayToDay.setFont(new Font("Monospaced", Font.BOLD, 20));
+		lblDayToDay.setBackground(new Color(255, 128, 64));
+		lblDayToDay.setBounds(0, 40, 138, 35);
+		panelRevenue.add(lblDayToDay);
 		
 		JLabel lblIconExit1 = new JLabel();
 		lblIconExit1.setBounds(1210, 3, 55, 39);
