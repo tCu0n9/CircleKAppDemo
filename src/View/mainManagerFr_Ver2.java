@@ -204,15 +204,15 @@ public class mainManagerFr_Ver2 extends JFrame {
 			
 			Connection cn = DBConnection.getConnection();
 			
-			String query = "select * from dbo.Customer order by CustomerID ASC";
+			String query = "select * from dbo.Customer1 order by ID ASC";
 			PreparedStatement ps = cn.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				Vector vector = new Vector();
-				vector.add(rs.getString("CustomerID"));
-				vector.add(rs.getString("CustomerName"));
-				vector.add(rs.getString("CustomerAddress"));
-				vector.add(rs.getString("CustomerPhone"));
+				vector.add(rs.getString("ID"));
+				vector.add(rs.getString("fullName"));
+				vector.add(rs.getString("Address"));
+				vector.add(rs.getString("Phone"));
 				model3.addRow(vector);
 			}
 			tableCustomer.setModel(model3);
@@ -302,23 +302,50 @@ public class mainManagerFr_Ver2 extends JFrame {
 	public void findStaff() {
 		try {
 			tableStaff.removeAll();
-			String[] arr1 = {"ID","Full Name","BoD","Address","Phone Number"};
+			String[] arr1 = {"ID", "Full Name", "Age", "Address", "Phone Number", "UserName", "Password", "Position"};
 			DefaultTableModel model1 = new DefaultTableModel(arr1,0);
 			
 			Connection cn = DBConnection.getConnection();
 			
 			String id = textField_FindID.getText();
 			String name = textField_FindName.getText();
-			String query = "select * from dbo.[Employees] where EmpID = "+ id +" or EmpName like N'%"+ name +"%'";
+			String query;
+			
+			if(textField_FindName.getText().equals("")) {
+				query = "select EmpID,EmpName,convert(varchar(20), BoD, 103)as BoD,EmpAddress,PhoneNum,Username,pw,position from Employees where Empid = '"+ id +"'";
+			}else if(textField_FindID.getText().equals("")) {
+				query = "select EmpID,EmpName,convert(varchar(20), BoD, 103)as BoD,EmpAddress,PhoneNum,Username,pw,position from Employees where EmpName like N'%"+ name +"%'";
+
+			}else if(textField_FindName.getText().equals("") && textField_FindID.getText().equals("")) {
+				JOptionPane.showMessageDialog(null, "Chưa có dữ liệu!");
+				return;
+			}else {
+				query = "select EmpID,EmpName,convert(varchar(20), BoD, 103)as BoD,EmpAddress,PhoneNum,Username,pw,position from Employees where Empid = '"+ id +"' and EmpName like N'%"+ name +"%'";
+			}
+			
 			PreparedStatement ps = cn.prepareStatement(query);
 			ResultSet rs1 = ps.executeQuery();
+			
 			while (rs1.next()) {
+				
 				Vector vector = new Vector();
 				vector.add(rs1.getString("EmpID"));
 				vector.add(rs1.getString("EmpName"));
 				vector.add(rs1.getString("BoD"));
 				vector.add(rs1.getString("EmpAddress"));
 				vector.add(rs1.getString("PhoneNum"));
+				vector.add(rs1.getString("Username"));
+				vector.add(rs1.getString("pw"));
+				
+				
+				int rsPst = Integer.parseInt(rs1.getString("position"));
+				if( rsPst == 1) {
+					pst = "Manager";
+				}else if(rsPst == 0) {
+					pst = "Staff";
+				}
+				vector.add(pst);
+				
 				model1.addRow(vector);
 			}
 			tableStaff.setModel(model1);
@@ -327,7 +354,6 @@ public class mainManagerFr_Ver2 extends JFrame {
 		}
 	}
 	
-
 	public mainManagerFr_Ver2() {
 		setTitle("Circle K App");
 		ImageIcon img = new ImageIcon("D:\\JavaWorkSpace\\CircleKAppDemo\\src\\Img\\logo.selectionTab.png");
@@ -337,7 +363,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 			@Override
 			public void componentShown(ComponentEvent e) {
 				showDataProduct();
-				showDataStaff();
+				
 				showDataCustomer();
 				showDataSupplier();
 				showDataCategory();
@@ -847,8 +873,22 @@ public class mainManagerFr_Ver2 extends JFrame {
 		lblFindStaff.setForeground(Color.WHITE);
 		lblFindStaff.setFont(new Font("Monospaced", Font.BOLD, 20));
 		lblFindStaff.setBackground(new Color(236, 41, 52));
-		lblFindStaff.setBounds(295, 600, 155, 70);
+		lblFindStaff.setBounds(386, 600, 155, 70);
 		panelStaffs.add(lblFindStaff);
+		
+		JLabel lblShow = new JLabel("Show", SwingConstants.CENTER);
+		lblShow.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				showDataStaff();
+			}
+		});
+		lblShow.setOpaque(true);
+		lblShow.setForeground(Color.WHITE);
+		lblShow.setFont(new Font("Monospaced", Font.BOLD, 20));
+		lblShow.setBackground(new Color(236, 41, 52));
+		lblShow.setBounds(194, 600, 155, 70);
+		panelStaffs.add(lblShow);
 		
 		panelCustomers = new JPanel();
 		layeredPane.add(panelCustomers, "name_89867989374100");
