@@ -48,15 +48,11 @@ public class LoginFr extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		
-		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					LoginFr frame = new LoginFr();
-					frame.setTitle("Circle K App");
 					frame.setVisible(true);
-					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -148,6 +144,10 @@ public class LoginFr extends JFrame {
 	}
 	
 	public LoginFr() {
+		setTitle("Circle K App");
+		ImageIcon img = new ImageIcon("D:\\JavaWorkSpace\\CircleKAppDemo\\src\\Img\\logo.selectionTab.png");
+		setIconImage(img.getImage());
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 950, 463);
 		
@@ -165,27 +165,16 @@ public class LoginFr extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		
-		ImageIcon img = new ImageIcon("D:\\JavaWorkSpace\\CircleKAppDemo\\src\\Img\\logo.selectionTab.png");
-		
-		setIconImage(img.getImage());
-		
 		JPanel panel = new JPanel();
 		panel.setBounds(473, 0, 477, 463);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		panel.setBackground(new Color(255, 255, 255));
 		
-		
-	
 		JButton btnExit = new JButton("Exit");
 		btnExit.setBackground(new Color(255, 255, 255));
 		btnExit.setBounds(246, 304, 134, 29);
 		panel.add(btnExit);
-		btnExit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
 		btnExit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -273,22 +262,6 @@ public class LoginFr extends JFrame {
 		panel.add(lb_Pass);
 		lb_Pass.setIcon(iconLock);
 		
-		JLabel btnX = new JLabel("X");
-		btnX.setHorizontalTextPosition(SwingConstants.CENTER);
-		btnX.setHorizontalAlignment(SwingConstants.CENTER);
-		btnX.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				JFrame frExit = new JFrame("Exit");
-				if(JOptionPane.showConfirmDialog(frExit, "Confirm if you want to exit","Circle K App",JOptionPane.YES_NO_OPTION)==JOptionPane.YES_NO_OPTION) {
-					System.exit(0);
-				}
-			}
-		});
-		btnX.setFont(new Font("Myanmar Text", Font.BOLD, 20));
-		btnX.setBounds(457, 0, 20, 31);
-		panel.add(btnX);
-		
 		JLabel lbLogo = new JLabel("");
 		ImageIcon icon1 = new ImageIcon("D:\\JavaWorkSpace\\CircleKAppDemo\\src\\Img\\Circle_K tron2.png");
 		lbLogo.setIcon(icon1);
@@ -305,8 +278,6 @@ public class LoginFr extends JFrame {
 		cam.setBackground(new Color(255, 127, 39));
 		cam.setBounds(0, 443, 475, 20);
 		contentPane.add(cam);
-		
-
 	}
 }
 

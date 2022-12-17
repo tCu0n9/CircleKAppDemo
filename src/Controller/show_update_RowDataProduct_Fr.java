@@ -159,12 +159,12 @@ public class show_update_RowDataProduct_Fr extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				String time = textField_MFG.getText();
-				String reg = "\\d{4}[-]\\d{1,2}[-]\\d{1,2}$";
+				String reg = "^(0?[1-9]|1[012])[\\/\\-](0?[1-9]|[12][0-9]|3[01])[\\/\\-]\\d{4}$";
 				
 				if(time.matches(reg)) {
 				}
 				else {
-					JOptionPane.showMessageDialog(null,"Sai định dạng thời gian (yyyy-mm-dd)!");
+					JOptionPane.showMessageDialog(null,"Sai định dạng thời gian (mm/dd/yyyy)!");
 					textField_MFG.requestFocus();
 					return;
 				}
@@ -180,12 +180,12 @@ public class show_update_RowDataProduct_Fr extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				String time = textField_EXP.getText();
-				String reg = "\\d{4}[-]\\d{1,2}[-]\\d{1,2}$";
+				String reg = "^(0?[1-9]|1[012])[\\/\\-](0?[1-9]|[12][0-9]|3[01])[\\/\\-]\\d{4}$";
 				
 				if(time.matches(reg)) {
 				}
 				else {
-					JOptionPane.showMessageDialog(null,"Sai định dạng thời gian (yyyy-mm-dd)!");
+					JOptionPane.showMessageDialog(null,"Sai định dạng thời gian (mm/dd/yyyy)!");
 					textField_EXP.requestFocus();
 					return;
 				}

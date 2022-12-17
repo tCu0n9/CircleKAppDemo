@@ -106,10 +106,6 @@ public class mainManagerFr_Ver2 extends JFrame {
 					mainManagerFr_Ver2 frame = new mainManagerFr_Ver2();
 					frame.setTitle("Circle K App");
 					frame.setVisible(true);
-					
-					ImageIcon img = new ImageIcon("D:\\JavaWorkSpace\\CircleKAppDemo\\src\\Img\\logo.selectionTab.png");
-					frame.setIconImage(img.getImage());
-					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -132,7 +128,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 			
 			Connection cn = DBConnection.getConnection();
 			
-			String query = "select * from dbo.[Product] order by id ASC";
+			String query = "select id,name, supid,cateid,convert(varchar(20), MFG, 103)as MFG,convert(varchar(20), EXP, 103)as EXP,unit,price from dbo.Product  order by id ASC";
 			PreparedStatement ps = cn.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			
@@ -166,7 +162,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 			
 			Connection cn = DBConnection.getConnection();
 			
-			String query = "select * from dbo.[Employees] order by Empid ASC ";
+			String query = "select EmpID,EmpName,convert(varchar(20), BoD, 103)as BoD,EmpAddress,PhoneNum,Username,pw,position from Employees order by Empid ASC ";
 			PreparedStatement ps = cn.prepareStatement(query);
 			
 			ResultSet rs = ps.executeQuery();
@@ -194,7 +190,6 @@ public class mainManagerFr_Ver2 extends JFrame {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
 	public static void showDataCustomer() {
@@ -283,7 +278,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 			
 			Connection cn = DBConnection.getConnection();
 			
-			String query = "select * from dbo.Bill order by billDate DESC";
+			String query = "select billID,price,discount,convert(varchar(50), billDate, 29)as billdate,empID from Bill ORDER BY billdate DESC";
 			PreparedStatement ps = cn.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
@@ -331,7 +326,9 @@ public class mainManagerFr_Ver2 extends JFrame {
 	
 
 	public mainManagerFr_Ver2() {
-		Staff st = new Staff();
+		setTitle("Circle K App");
+		ImageIcon img = new ImageIcon("D:\\JavaWorkSpace\\CircleKAppDemo\\src\\Img\\logo.selectionTab.png");
+		setIconImage(img.getImage());
 		
 		addComponentListener(new ComponentAdapter() {
 			@Override
@@ -1234,11 +1231,13 @@ public class mainManagerFr_Ver2 extends JFrame {
 		lblShowDetails.setForeground(Color.WHITE);
 		lblShowDetails.setFont(new Font("Monospaced", Font.BOLD, 20));
 		lblShowDetails.setBackground(new Color(236, 41, 52));
-		lblShowDetails.setBounds(10, 585, 155, 70);
+		lblShowDetails.setBounds(30, 595, 155, 70);
 		panelTakings.add(lblShowDetails);
 		
-		JLabel lblExit = new JLabel("X");
-		lblExit.addMouseListener(new MouseAdapter() {
+		JLabel lblIconExit1 = new JLabel();
+		lblIconExit1.setBounds(1210, 3, 55, 39);
+		lblIconExit1.setIcon(new ImageIcon("D:\\JavaWorkSpace\\CircleKAppDemo\\src\\Img\\ExitButtonIcon.png"));
+		lblIconExit1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				JFrame frExit = new JFrame("Exit");
@@ -1247,9 +1246,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 				}
 			}
 		});
-		lblExit.setFont(new Font("Tahoma", Font.BOLD, 26));
-		lblExit.setBounds(1252, 0, 28, 40);
-		mainPanel.add(lblExit);
+		mainPanel.add(lblIconExit1);
 		
 		textField_FindID = new JTextField();
 		textField_FindID.addKeyListener(new KeyAdapter() {

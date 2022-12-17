@@ -305,7 +305,7 @@ public class addProductsTextField_Fr extends JFrame {
 		lblMNhnVin_4.setBounds(121, 204, 104, 30);
 		contentPane.add(lblMNhnVin_4);
 		
-		lblMNhnVin_5 = new JLabel("BB", SwingConstants.LEFT);
+		lblMNhnVin_5 = new JLabel("EXP", SwingConstants.LEFT);
 		lblMNhnVin_5.setFont(new Font("Monospaced", Font.BOLD, 14));
 		lblMNhnVin_5.setBounds(121, 245, 104, 30);
 		contentPane.add(lblMNhnVin_5);
@@ -333,12 +333,12 @@ public class addProductsTextField_Fr extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				String mfg = textField_MFG.getText();
-				String reg = "\\d{4}[-]\\d{1,2}[-]\\d{1,2}$";
+				String reg = "^(0?[1-9]|1[012])[\\/\\-](0?[1-9]|[12][0-9]|3[01])[\\/\\-]\\d{4}$";
 				if(mfg.matches(reg)) {
 					
 				}
 				else {
-					JOptionPane.showMessageDialog(null,"Sai định dạng ngày (yyyy-mm-dd)!");
+					JOptionPane.showMessageDialog(null,"Sai định dạng thời gian (mm/dd/yyyy)!");
 					textField_MFG.requestFocus();
 					return;
 				}
@@ -354,12 +354,12 @@ public class addProductsTextField_Fr extends JFrame {
 			@Override
 			public void focusLost(FocusEvent e) {
 				String exp = textField_EXP.getText();
-				String reg = "\\d{4}[-]\\d{1,2}[-]\\d{1,2}$";
+				String reg = "^(0?[1-9]|1[012])[\\/\\-](0?[1-9]|[12][0-9]|3[01])[\\/\\-]\\d{4}$";
 				if(exp.matches(reg)) {
 					
 				}
 				else {
-					JOptionPane.showMessageDialog(null,"Sai định dạng ngày (yyyy-mm-dd)!");
+					JOptionPane.showMessageDialog(null,"Sai định dạng thời gian (mm/dd/yyyy)!");
 					textField_EXP.requestFocus();
 					return;
 				}

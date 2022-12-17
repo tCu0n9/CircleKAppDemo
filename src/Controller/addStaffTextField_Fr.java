@@ -197,12 +197,12 @@ public class addStaffTextField_Fr extends JFrame implements ActionListener {
 			@Override
 			public void focusLost(FocusEvent e) {
 				String age = textField_BoD.getText();
-				String reg = "\\d{4}[-]\\d{1,2}[-]\\d{1,2}$";
+				String reg = "^(0?[1-9]|1[012])[\\/\\-](0?[1-9]|[12][0-9]|3[01])[\\/\\-]\\d{4}$";
 				
 				if(age.matches(reg)) {
 				}
 				else {
-					JOptionPane.showMessageDialog(null,"Sai định dạng Ngày sinh (yyyy-mm-dd)!");
+					JOptionPane.showMessageDialog(null,"Sai định dạng thời gian (mm/dd/yyyy)!");
 					textField_BoD.requestFocus();
 					return;
 				}

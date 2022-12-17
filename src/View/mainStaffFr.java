@@ -87,11 +87,9 @@ public class mainStaffFr extends JFrame {
 			public void run() {
 				try {
 					mainStaffFr frame = new mainStaffFr();
+					
 					frame.setTitle("Circle K App");
 					frame.setVisible(true);
-					
-					ImageIcon img = new ImageIcon("D:\\JavaWorkSpace\\CircleKAppDemo\\src\\Img\\logo.selectionTab.png");
-					frame.setIconImage(img.getImage());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -186,9 +184,15 @@ public class mainStaffFr extends JFrame {
 	}
 	
 	public mainStaffFr() {
+		setTitle("Circle K App");
+		ImageIcon img = new ImageIcon("D:\\JavaWorkSpace\\CircleKAppDemo\\src\\Img\\logo.selectionTab.png");
+		setIconImage(img.getImage());
+		
 		EmpNAME = LoginFr.EmpName;
 		EmpID = LoginFr.EmpID;
+		
 		clearData();
+		
 		addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent e) {
@@ -670,8 +674,8 @@ public class mainStaffFr extends JFrame {
 		btnAdd_1.setBounds(432, 0, 95, 25);
 		panelProduct.add(btnAdd_1);
 		
-		ImageIcon img = new ImageIcon("D:\\JavaWorkSpace\\CircleKApp\\src\\Img\\download.png");
-		setIconImage(img.getImage());
+		ImageIcon img1 = new ImageIcon("D:\\JavaWorkSpace\\CircleKApp\\src\\Img\\download.png");
+		setIconImage(img1.getImage());
 	}
 	
 	private boolean checkTrungID_bd() {	
