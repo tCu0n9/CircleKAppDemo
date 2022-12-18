@@ -124,7 +124,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 	
 	
 	@SuppressWarnings("unchecked")
-	public static void showDataProduct() {
+	public static void showDataProductSortID() {
 		
 		try {
 			tableProduct.removeAll();
@@ -134,6 +134,40 @@ public class mainManagerFr_Ver2 extends JFrame {
 			Connection cn = DBConnection.getConnection();
 			
 			String query = "select id,name, supid,cateid,convert(varchar(20), MFG, 103)as MFG,convert(varchar(20), EXP, 103)as EXP,unit,price,quantity from dbo.Product  order by id ASC";
+			PreparedStatement ps = cn.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				@SuppressWarnings("rawtypes")
+				Vector vector = new Vector();
+				vector.add(rs.getString("id"));
+				vector.add(rs.getString("Name"));
+				vector.add(rs.getString("SupID"));
+				vector.add(rs.getString("CateID"));
+				vector.add(rs.getString("MFG"));
+				vector.add(rs.getString("EXP"));
+				vector.add(rs.getString("Unit"));
+				vector.add(rs.getString("Price"));
+				vector.add(rs.getString("Quantity"));
+				model2.addRow(vector);
+			}
+			tableProduct.setModel(model2);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+public static void showDataProductSortQuantity() {
+		
+		try {
+			tableProduct.removeAll();
+			String[] arr2 = {"ID", "Name", "Supplier ID", "Category ID", "MFG", "EXP", "Unit", "Price", "Quantity"};
+			DefaultTableModel model2 = new DefaultTableModel(arr2,0);
+			
+			Connection cn = DBConnection.getConnection();
+			
+			String query = "select id,name, supid,cateid,convert(varchar(20), MFG, 103)as MFG,convert(varchar(20), EXP, 103)as EXP,unit,price,quantity from dbo.Product  order by quantity ASC";
 			PreparedStatement ps = cn.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			
@@ -820,6 +854,42 @@ public class mainManagerFr_Ver2 extends JFrame {
 		layeredPane.add(panelProducts, "name_89738470225600");
 		panelProducts.setLayout(null);
 		
+		JPanel panelShowSort = new JPanel();
+		panelShowSort.setBounds(170, 500, 230, 86);
+		panelProducts.add(panelShowSort);
+		panelShowSort.setLayout(null);
+		panelShowSort.setVisible(false);
+		
+		JLabel lblSortByQuantity = new JLabel("Sort By ID", SwingConstants.CENTER);
+		lblSortByQuantity.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				showDataProductSortID();
+				panelShowSort.setVisible(false);
+			}
+		});
+		lblSortByQuantity.setBounds(10, 10, 211, 27);
+		lblSortByQuantity.setOpaque(true);
+		lblSortByQuantity.setForeground(Color.WHITE);
+		lblSortByQuantity.setFont(new Font("Monospaced", Font.BOLD, 20));
+		lblSortByQuantity.setBackground(new Color(236, 41, 52));
+		panelShowSort.add(lblSortByQuantity);
+		
+		JLabel lblSortByQuantity_1 = new JLabel("Sort By Quantity", SwingConstants.CENTER);
+		lblSortByQuantity_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				showDataProductSortQuantity();
+				panelShowSort.setVisible(false);
+			}
+		});
+		lblSortByQuantity_1.setOpaque(true);
+		lblSortByQuantity_1.setForeground(Color.WHITE);
+		lblSortByQuantity_1.setFont(new Font("Monospaced", Font.BOLD, 20));
+		lblSortByQuantity_1.setBackground(new Color(236, 41, 52));
+		lblSortByQuantity_1.setBounds(10, 47, 211, 27);
+		panelShowSort.add(lblSortByQuantity_1);
+		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 10, 995, 565);
 		panelProducts.add(scrollPane);
@@ -873,7 +943,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 						PreparedStatement ps = cn.prepareStatement(query);
 						ps.setString(1,id);
 						ps.execute();
-						showDataProduct();
+						showDataProductSortID();
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
@@ -950,7 +1020,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 		lblShowPr.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				showDataProduct();
+				panelShowSort.setVisible(true);
 			}
 		});
 		lblShowPr.setOpaque(true);
@@ -960,6 +1030,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 		lblShowPr.setBounds(211, 600, 155, 70);
 		panelProducts.add(lblShowPr);
 		
+
 		panelStaffs = new JPanel();
 		layeredPane.add(panelStaffs, "name_89813235964000");
 		panelStaffs.setLayout(null);

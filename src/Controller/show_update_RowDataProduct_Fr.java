@@ -245,7 +245,7 @@ public class show_update_RowDataProduct_Fr extends JFrame {
 					
 					ps.execute();
 					
-					mainManagerFr_Ver2.showDataProduct();
+					mainManagerFr_Ver2.showDataProductSortID();
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

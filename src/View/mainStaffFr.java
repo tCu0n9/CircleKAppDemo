@@ -5,6 +5,7 @@ package View;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.EventQueue;import javax.management.Query;
+import javax.management.openmbean.OpenDataException;
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -635,26 +636,30 @@ public class mainStaffFr extends JFrame {
 					String exp = model.getValueAt(index, 5).toString();
 					String unit = model.getValueAt(index, 6).toString();
 					String price = model.getValueAt(index, 7).toString();
+					int quantity = Integer.parseInt(model.getValueAt(index, 8).toString());
 					
 					try {
-						int quantity = Integer.parseInt(JOptionPane.showInputDialog("Quantity"));
-						if(quantity == 0 ) {
+						int quantityOrder = Integer.parseInt(JOptionPane.showInputDialog("Quantity"));
+						if(quantityOrder == 0 ) {
 							JOptionPane.showMessageDialog(null, "Só lượng không hợp lệ!");
+							return;
+						}else if(quantityOrder > quantity) {
+							JOptionPane.showMessageDialog(null, "Không đủ số lượng!");
+							return;
 						}else{
-							
 							if(checkTrungID_bd()==true) {
 								JOptionPane.showMessageDialog(null, "Sản phẩm đã được chọn!");
 								return;
 							}else{
-								int tPrice = quantity*Integer.parseInt(price);
+								int tPrice = quantityOrder*Integer.parseInt(price);
 								ArrayList<billDetail> list = new ArrayList<>();
 								bd = new billDetail();
 								bd.setId(Integer.parseInt(id));
 								bd.setPrName(name);
 								bd.setCateID(Integer.parseInt(cateid));
 								bd.setPrice(Integer.parseInt(price));
-								bd.setQuantity(quantity);
-								bd.setTotalPrice(quantity,Integer.parseInt(price));
+								bd.setQuantity(quantityOrder);
+								bd.setTotalPrice(quantityOrder,Integer.parseInt(price));
 								list.add(bd);
 								
 								try {
@@ -662,7 +667,7 @@ public class mainStaffFr extends JFrame {
 									Connection cn = DBConnection.getConnection();
 									
 									String query1 = "insert into BillDetail(ID,NamePr,cateID,Price,Quantity,totalPrice) values("+ id +",N'"+ name +"',"+ cateid +","+ price +","+ quantity +","+tPrice+")";
-									String query2 = "insert into details(ID,NamePr,Price,Quantity,totalPrice,billID) values("+ id +",N'"+ name +"',"+ price +","+ quantity +","+ tPrice +","+ billID +")";
+									String query2 = "insert into details(ID,NamePr,Price,Quantity,totalPrice,billID) values("+ id +",N'"+ name +"',"+ price +","+ quantityOrder +","+ tPrice +","+ billID +")";
 									PreparedStatement ps1 = cn.prepareStatement(query1);
 									PreparedStatement ps2 = cn.prepareStatement(query2);
 									ps1.executeUpdate();

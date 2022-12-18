@@ -234,7 +234,7 @@ public class addProductsTextField_Fr extends JFrame {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					mainManagerFr_Ver2.showDataProduct();
+					mainManagerFr_Ver2.showDataProductSortID();
 				}
 			
 			}
