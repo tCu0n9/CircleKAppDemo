@@ -128,12 +128,12 @@ public class mainManagerFr_Ver2 extends JFrame {
 		
 		try {
 			tableProduct.removeAll();
-			String[] arr2 = {"ID", "Name", "Supplier ID", "Category ID", "MFG", "EXP", "Unit", "Price"};
+			String[] arr2 = {"ID", "Name", "Supplier ID", "Category ID", "MFG", "EXP", "Unit", "Price", "Quantity"};
 			DefaultTableModel model2 = new DefaultTableModel(arr2,0);
 			
 			Connection cn = DBConnection.getConnection();
 			
-			String query = "select id,name, supid,cateid,convert(varchar(20), MFG, 103)as MFG,convert(varchar(20), EXP, 103)as EXP,unit,price from dbo.Product  order by id ASC";
+			String query = "select id,name, supid,cateid,convert(varchar(20), MFG, 103)as MFG,convert(varchar(20), EXP, 103)as EXP,unit,price,quantity from dbo.Product  order by id ASC";
 			PreparedStatement ps = cn.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			
@@ -148,6 +148,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 				vector.add(rs.getString("EXP"));
 				vector.add(rs.getString("Unit"));
 				vector.add(rs.getString("Price"));
+				vector.add(rs.getString("Quantity"));
 				model2.addRow(vector);
 			}
 			tableProduct.setModel(model2);
@@ -314,7 +315,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 	public void findProduct() {
 		try {
 			tableStaff.removeAll();
-			String[] arr1 = {"ID", "Full Name", "Age", "Address", "Phone Number", "UserName", "Password", "Position"};
+			String[] arr1 = {"ID", "Name", "Supplier ID", "Category ID", "MFG", "EXP", "Unit", "Price", "Quantity"};
 			DefaultTableModel model = new DefaultTableModel(arr1,0);
 			
 			Connection cn = DBConnection.getConnection();
@@ -324,14 +325,14 @@ public class mainManagerFr_Ver2 extends JFrame {
 			String query;
 			
 			if(textField_FindName.getText().equals("")) {
-				query = "select id,name,supid,cateid,convert(varchar(20), MFG, 103) as MFG,convert(varchar(20), EXP, 103) as EXP,unit,price from dbo.Product where id = '"+ id +"'";
+				query = "select id,name,supid,cateid,convert(varchar(20), MFG, 103) as MFG,convert(varchar(20), EXP, 103) as EXP,unit,price,quantity from dbo.Product where id = '"+ id +"'";
 			}else if(textField_FindID.getText().equals("")) {
-				query = "select id,name,supid,cateid,convert(varchar(20), MFG, 103) as MFG,convert(varchar(20), EXP, 103) as EXP,unit,price from dbo.Product where name like N'%"+ name +"%'";
+				query = "select id,name,supid,cateid,convert(varchar(20), MFG, 103) as MFG,convert(varchar(20), EXP, 103) as EXP,unit,price,quantity from dbo.Product where name like N'%"+ name +"%'";
 			}else if(textField_FindName.getText().equals("") && textField_FindID.getText().equals("")) {
 				JOptionPane.showMessageDialog(null, "Chưa có dữ liệu!");
 				return;
 			}else {
-				query = "select id,name,supid,cateid,convert(varchar(20), MFG, 103) as MFG,convert(varchar(20), EXP, 103) as EXP,unit,price from dbo.Product where id = '"+ id +"' and Name like N'%"+ name +"%'";
+				query = "select id,name,supid,cateid,convert(varchar(20), MFG, 103) as MFG,convert(varchar(20), EXP, 103) as EXP,unit,price,quantity from dbo.Product where id = '"+ id +"' and Name like N'%"+ name +"%'";
 			}
 			
 			PreparedStatement ps = cn.prepareStatement(query);
@@ -348,6 +349,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 				vector.add(rs.getString("EXP"));
 				vector.add(rs.getString("Unit"));
 				vector.add(rs.getString("Price"));
+				vector.add(rs.getString("Quantity"));
 				model.addRow(vector);
 			}
 			tableProduct.setModel(model);
@@ -796,7 +798,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 		JLabel lblTakings = new JLabel("TAKINGS");
 		lblTakings.setForeground(Color.WHITE);
 		lblTakings.setFont(new Font("Monospaced", Font.BOLD, 20));
-		lblTakings.setBounds(90, 10, 137, 70);
+		lblTakings.setBounds(90, 0, 137, 70);
 		billPanel.add(lblTakings);
 		
 		JLabel lblIconTakings = new JLabel("");
@@ -828,7 +830,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 			new Object[][] {
 			},
 			new String[] {
-				"ID", "Name", "Supplier ID", "Category ID", "MFG", "EXP", "Unit", "Price"
+				"ID", "Name", "Supplier ID", "Category ID", "MFG", "EXP", "Unit", "Price", "Quantity"
 			}
 		));
 		
@@ -919,6 +921,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 					String exp = model.getValueAt(index, 5).toString();
 					String unit = model.getValueAt(index, 6).toString();
 					String price = model.getValueAt(index, 7).toString();
+					String quantity = model.getValueAt(index, 8).toString();
 					
 					jtableProdcutRowdata.setVisible(true);
 					jtableProdcutRowdata.setBounds(100, 100, 500, 500);
@@ -932,6 +935,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 					jtableProdcutRowdata.textField_EXP.setText(exp);
 					jtableProdcutRowdata.textField_Unit.setText(unit);
 					jtableProdcutRowdata.textField_Price.setText(price);
+					jtableProdcutRowdata.textField_Quantity.setText(quantity);
 				}	
 			}
 		});

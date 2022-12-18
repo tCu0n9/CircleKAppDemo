@@ -9,11 +9,12 @@ public class Products {
 	private String productBB;
 	private String unit;
 	private Long price;
+	private int Quantity;
 	
 	public Products() {
 		
 	}
-	public Products(int productID,String productName,int supplierID, int categoryID, String productMFG, String productBB,String unit,long price) {
+	public Products(int productID,String productName,int supplierID, int categoryID, String productMFG, String productBB,String unit,long price,int quantity) {
 		this.productID = productID;
 		this.productName = productName;
 		this.supplierID = supplierID;
@@ -24,6 +25,12 @@ public class Products {
 		this.price = price;
 	}
 	
+	public int getQuantity() {
+		return Quantity;
+	}
+	public void setQuantity(int quantity) {
+		Quantity = quantity;
+	}
 	public int getProductID() {
 		return this.productID;
 	}

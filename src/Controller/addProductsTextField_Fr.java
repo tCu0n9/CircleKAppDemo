@@ -45,15 +45,16 @@ public class addProductsTextField_Fr extends JFrame {
 	private JLabel lblProductName;
 	private JLabel lblSupplier;
 	private JLabel lblCategoryId;
-	private JLabel lblMNhnVin_4;
-	private JLabel lblMNhnVin_5;
+	private JLabel lblMFG;
+	private JLabel lblEXP;
 	private JTextField textField_CategoryID;
 	private JTextField textField_MFG;
 	private JTextField textField_EXP;
-	private JLabel lblMNhnVin_1;
+	private JLabel lblUnit;
 	private JTextField textField_Unit;
-	private JLabel lblMNhnVin_2;
+	private JLabel lblPrice;
 	private JTextField textField_Price;
+	private JTextField textField_Quantity;
 
 	/**
 	 * Launch the application.
@@ -173,6 +174,9 @@ public class addProductsTextField_Fr extends JFrame {
 				}else if(textField_Price.getText().equals("")) {
 					JOptionPane.showMessageDialog(null, "Price không được bỏ trống !");
 					textField_Price.requestFocus();
+				}else if(textField_Quantity.getText().equals("")) {
+					JOptionPane.showMessageDialog(null, "Quantity không được bỏ trống !");
+					textField_Quantity.requestFocus();
 				}else if(checkTrungID() == true) {
 					JOptionPane.showMessageDialog(null, "ID đã bị trùng");
 					textField_ProductID.requestFocus();
@@ -180,7 +184,7 @@ public class addProductsTextField_Fr extends JFrame {
 				}else if(checkSupp() == false) {
 					JOptionPane.showMessageDialog(null,"Supplier ID không tồn tại!");
 					textField_SuppID.requestFocus();
-					return;
+					return;	
 				}else if(checkCate() == false) {
 					JOptionPane.showMessageDialog(null,"Category ID không tồn tại!");
 					textField_CategoryID.requestFocus();
@@ -196,6 +200,7 @@ public class addProductsTextField_Fr extends JFrame {
 					p.setProductBB(textField_EXP.getText());
 					p.setUnit(textField_Unit.getText());
 					p.setPrice(Integer.parseInt(textField_Price.getText()));
+					p.setQuantity(Integer.parseInt(textField_Quantity.getText()));
 					list.add(p);
 					
 					mainManagerFr_Ver2.AddRowToJTableProduct(new Object[]{
@@ -207,11 +212,12 @@ public class addProductsTextField_Fr extends JFrame {
 						p.getProductBB(),
 						p.getUnit(),
 						p.getPrice(),
+						p.getQuantity()
 					});
 					
 					try {
 						Connection cn = DBConnection.getConnection();
-						String query = "insert into product(id,name,supID,cateID,MFG,EXP,Unit,Price) values(?,?,?,?,?,?,?,?)";
+						String query = "insert into product(id,name,supID,cateID,MFG,EXP,Unit,Price,Quantity) values(?,?,?,?,?,?,?,?,?)";
 						PreparedStatement ps = cn.prepareStatement(query);
 						ps.setString(1, textField_ProductID.getText());
 						ps.setString(2, textField_ProductName.getText());
@@ -221,6 +227,7 @@ public class addProductsTextField_Fr extends JFrame {
 						ps.setString(6, textField_EXP.getText());
 						ps.setString(7, textField_Unit.getText());
 						ps.setString(8, textField_Price.getText());
+						ps.setString(9, textField_Quantity.getText());
 						
 						ps.executeUpdate();
 					} catch (SQLException e1) {
@@ -235,13 +242,13 @@ public class addProductsTextField_Fr extends JFrame {
 		btnAdd.setForeground(new Color(0, 0, 0));
 		btnAdd.setBackground(new Color(255, 255, 255));
 		btnAdd.setFont(new Font("Monospaced", Font.BOLD, 20));
-		btnAdd.setBounds(121, 405, 85, 33);
+		btnAdd.setBounds(121, 430, 85, 33);
 		contentPane.add(btnAdd);
 		
-		JLabel lblMNhnVin = new JLabel("Product ID", SwingConstants.LEFT);
-		lblMNhnVin.setFont(new Font("Monospaced", Font.BOLD, 14));
-		lblMNhnVin.setBounds(121, 40, 104, 30);
-		contentPane.add(lblMNhnVin);
+		JLabel lblProductID = new JLabel("Product ID", SwingConstants.LEFT);
+		lblProductID.setFont(new Font("Monospaced", Font.BOLD, 14));
+		lblProductID.setBounds(121, 40, 104, 30);
+		contentPane.add(lblProductID);
 		
 		textField_ProductID = new JTextField();
 		textField_ProductID.addKeyListener(new KeyAdapter() {
@@ -300,15 +307,15 @@ public class addProductsTextField_Fr extends JFrame {
 		lblCategoryId.setBounds(121, 164, 104, 30);
 		contentPane.add(lblCategoryId);
 		
-		lblMNhnVin_4 = new JLabel("MFG", SwingConstants.LEFT);
-		lblMNhnVin_4.setFont(new Font("Monospaced", Font.BOLD, 14));
-		lblMNhnVin_4.setBounds(121, 204, 104, 30);
-		contentPane.add(lblMNhnVin_4);
+		lblMFG = new JLabel("MFG", SwingConstants.LEFT);
+		lblMFG.setFont(new Font("Monospaced", Font.BOLD, 14));
+		lblMFG.setBounds(121, 204, 104, 30);
+		contentPane.add(lblMFG);
 		
-		lblMNhnVin_5 = new JLabel("EXP", SwingConstants.LEFT);
-		lblMNhnVin_5.setFont(new Font("Monospaced", Font.BOLD, 14));
-		lblMNhnVin_5.setBounds(121, 245, 104, 30);
-		contentPane.add(lblMNhnVin_5);
+		lblEXP = new JLabel("EXP", SwingConstants.LEFT);
+		lblEXP.setFont(new Font("Monospaced", Font.BOLD, 14));
+		lblEXP.setBounds(121, 245, 104, 30);
+		contentPane.add(lblEXP);
 		
 		textField_CategoryID = new JTextField();
 		textField_CategoryID.addKeyListener(new KeyAdapter() {
@@ -370,10 +377,10 @@ public class addProductsTextField_Fr extends JFrame {
 		textField_EXP.setBounds(234, 245, 225, 30);
 		contentPane.add(textField_EXP);
 		
-		lblMNhnVin_1 = new JLabel("Unit", SwingConstants.LEFT);
-		lblMNhnVin_1.setFont(new Font("Monospaced", Font.BOLD, 14));
-		lblMNhnVin_1.setBounds(121, 286, 104, 30);
-		contentPane.add(lblMNhnVin_1);
+		lblUnit = new JLabel("Unit", SwingConstants.LEFT);
+		lblUnit.setFont(new Font("Monospaced", Font.BOLD, 14));
+		lblUnit.setBounds(121, 286, 104, 30);
+		contentPane.add(lblUnit);
 		
 		textField_Unit = new JTextField();
 		textField_Unit.setFont(new Font("Monospaced", Font.BOLD, 14));
@@ -381,10 +388,10 @@ public class addProductsTextField_Fr extends JFrame {
 		textField_Unit.setBounds(234, 286, 225, 30);
 		contentPane.add(textField_Unit);
 		
-		lblMNhnVin_2 = new JLabel("Price", SwingConstants.LEFT);
-		lblMNhnVin_2.setFont(new Font("Monospaced", Font.BOLD, 14));
-		lblMNhnVin_2.setBounds(121, 327, 104, 30);
-		contentPane.add(lblMNhnVin_2);
+		lblPrice = new JLabel("Price", SwingConstants.LEFT);
+		lblPrice.setFont(new Font("Monospaced", Font.BOLD, 14));
+		lblPrice.setBounds(121, 327, 104, 30);
+		contentPane.add(lblPrice);
 		
 		textField_Price = new JTextField();
 		textField_Price.addKeyListener(new KeyAdapter() {
@@ -416,12 +423,36 @@ public class addProductsTextField_Fr extends JFrame {
 				textField_EXP.setText(null);
 				textField_Unit.setText(null);
 				textField_Price.setText(null);
+				textField_Quantity.setText(null);
 			}
 		});
 		btnClear.setForeground(Color.BLACK);
 		btnClear.setFont(new Font("Monospaced", Font.BOLD, 20));
 		btnClear.setBackground(new Color(255, 255, 255));
-		btnClear.setBounds(355, 405, 104, 33);
+		btnClear.setBounds(353, 430, 104, 33);
 		contentPane.add(btnClear);
+		
+		textField_Quantity = new JTextField();
+		textField_Quantity.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				char c = e.getKeyChar();
+				
+				if(Character.isLetter(c)) {
+					JOptionPane.showMessageDialog(null, "Chỉ nhập số!!");
+					textField_Price.setText(null);
+					textField_Price.requestFocus();
+				}
+			}
+		});
+		textField_Quantity.setFont(new Font("Monospaced", Font.BOLD, 14));
+		textField_Quantity.setColumns(10);
+		textField_Quantity.setBounds(234, 367, 225, 30);
+		contentPane.add(textField_Quantity);
+		
+		JLabel lblQuantity = new JLabel("Quantity", SwingConstants.LEFT);
+		lblQuantity.setFont(new Font("Monospaced", Font.BOLD, 14));
+		lblQuantity.setBounds(121, 367, 104, 30);
+		contentPane.add(lblQuantity);
 	}
 }

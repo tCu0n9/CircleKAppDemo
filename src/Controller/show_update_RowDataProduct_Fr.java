@@ -37,6 +37,9 @@ public class show_update_RowDataProduct_Fr extends JFrame {
 	public JTextField textField_EXP;
 	public JTextField textField_Unit;
 	public JTextField textField_Price;
+	public JTextField textField_Quantity;
+	private JLabel lblQuantity;
+	
 
 	/**
 	 * Launch the application.
@@ -59,7 +62,7 @@ public class show_update_RowDataProduct_Fr extends JFrame {
 	 */
 	public show_update_RowDataProduct_Fr() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 500, 465);
+		setBounds(100, 100, 500, 509);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -234,8 +237,9 @@ public class show_update_RowDataProduct_Fr extends JFrame {
 					String exp = textField_EXP.getText();
 					String unit = textField_Unit.getText();
 					String price = textField_Price.getText();
+					String quantity = textField_Quantity.getText();
 					
-					String query = "UPDATE Product SET name = N'" + prname + "', Supid = "+ suppid +", cateID = "+ cateid +", MFG = '"+ mfg +"', EXP = '"+ exp +"', unit ='"+ unit +"', price ='"+ price +"' WHERE ID = "+ prid +"";
+					String query = "UPDATE Product SET name = N'" + prname + "', Supid = "+ suppid +", cateID = "+ cateid +", MFG = '"+ mfg +"', EXP = '"+ exp +"', unit ='"+ unit +"', price ='"+ price +"',quantity = '"+ quantity +"' WHERE ID = "+ prid +"";
 				
 					PreparedStatement ps = cn.prepareStatement(query);
 					
@@ -251,7 +255,30 @@ public class show_update_RowDataProduct_Fr extends JFrame {
 		btnUpdate.setForeground(Color.BLACK);
 		btnUpdate.setFont(new Font("Monospaced", Font.BOLD, 20));
 		btnUpdate.setBackground(Color.WHITE);
-		btnUpdate.setBounds(166, 374, 115, 35);
+		btnUpdate.setBounds(165, 410, 115, 35);
 		contentPane.add(btnUpdate);
+		
+		textField_Quantity = new JTextField();
+		textField_Quantity.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				char c = e.getKeyChar();
+				
+				if(Character.isLetter(c)) {
+					JOptionPane.showMessageDialog(null, "Chỉ nhập số!!");
+					textField_Quantity.setText(null);
+					textField_Quantity.requestFocus();
+				}
+			}
+		});
+		textField_Quantity.setFont(new Font("Monospaced", Font.BOLD, 14));
+		textField_Quantity.setColumns(10);
+		textField_Quantity.setBounds(166, 358, 225, 30);
+		contentPane.add(textField_Quantity);
+		
+		lblQuantity = new JLabel("Quantity", SwingConstants.LEFT);
+		lblQuantity.setFont(new Font("Monospaced", Font.BOLD, 14));
+		lblQuantity.setBounds(52, 358, 104, 30);
+		contentPane.add(lblQuantity);
 	}
 }
