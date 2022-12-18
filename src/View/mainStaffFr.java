@@ -134,7 +134,7 @@ public class mainStaffFr extends JFrame {
 		
 		try {
 			tableProduct.removeAll();
-			String[] arr2 = {"ID", "Name", "Supplier ID", "Category ID", "MFG", "EXP", "Unit", "Price"};
+			String[] arr2 = {"ID", "Name", "Supplier ID", "Category ID", "MFG", "EXP", "Unit", "Price", "Quantity"};
 			DefaultTableModel model2 = new DefaultTableModel(arr2,0);
 			
 			Connection cn = DBConnection.getConnection();
@@ -153,6 +153,7 @@ public class mainStaffFr extends JFrame {
 				vector.add(rs.getString("EXP"));
 				vector.add(rs.getString("Unit"));
 				vector.add(rs.getString("Price"));
+				vector.add(rs.getString("quantity"));
 				model2.addRow(vector);
 			}
 			tableProduct.setModel(model2);
@@ -420,7 +421,7 @@ public class mainStaffFr extends JFrame {
 					try {
 						Connection cn  = DBConnection.getConnection();
 						String query = "delete billDetail;\r\n"
-										+ "delete details;";
+										+ "delete from details where billID ="+billID+" ;";
 						PreparedStatement ps;
 						ps = cn.prepareStatement(query);
 						ps.execute();
@@ -460,9 +461,28 @@ public class mainStaffFr extends JFrame {
 							String query = "insert into bill(billID,price,discount,billDate,empID) values("+ billID +","+ totalPr +",'"+ discountName +"','"+ time +"',"+EmpID+")";
 							PreparedStatement ps = cn.prepareStatement(query);
 							ps.executeUpdate();
+							
 						} catch (SQLException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
+						}
+						
+						try {
+							Connection cn = DBConnection.getConnection();
+							String query2 = "select * from details where billId = " + billID;
+							PreparedStatement ps1 = cn.prepareStatement(query2);
+							ResultSet rs = ps1.executeQuery();
+							while(rs.next()) {
+								int ItemId = rs.getInt("id");
+								int quantitySold = rs.getInt("quantity");
+							
+								String query3 = "EXec dbo.Quantity_cal @ItemID = "+ ItemId +", @quantitySold = "+ quantitySold  ;
+								
+								PreparedStatement ps = cn.prepareStatement(query3);
+								ps.executeUpdate();
+							}
+						} catch (Exception e2) {
+							// TODO: handle exception
 						}
 						
 						try {
@@ -554,7 +574,7 @@ public class mainStaffFr extends JFrame {
 			new Object[][] {
 			},
 			new String[] {
-					"ID", "Name", "Supplier ID", "Category ID", "MFG", "EXP", "Unit", "Price"
+				"ID", "Name", "Supplier ID", "Category ID", "MFG", "EXP", "Unit", "Price", "Quantity"
 			}
 		));
 		scrollPane_3.setViewportView(tableProduct);
