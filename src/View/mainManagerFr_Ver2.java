@@ -72,6 +72,7 @@ import javax.swing.event.AncestorListener;
 import javax.swing.event.AncestorEvent;
 
 
+@SuppressWarnings({ "serial", "unused" })
 public class mainManagerFr_Ver2 extends JFrame {
 	private final JLabel lblDashBoardLogo = new JLabel("");
 	private JLayeredPane layeredPane;
@@ -89,8 +90,8 @@ public class mainManagerFr_Ver2 extends JFrame {
 	private static JTable tableCategory;
 	private static JTable tableTakings;
 	
-	private JTextField textField_FindID;
-	private JTextField textField_FindName;
+	private static JTextField textField_FindID;
+	private static JTextField textField_FindName;
 	
 	private String inputID;
 	private JPanel panelRevenue;
@@ -122,6 +123,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 	
 	
 	
+	@SuppressWarnings("unchecked")
 	public static void showDataProduct() {
 		
 		try {
@@ -136,6 +138,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 			ResultSet rs = ps.executeQuery();
 			
 			while(rs.next()) {
+				@SuppressWarnings("rawtypes")
 				Vector vector = new Vector();
 				vector.add(rs.getString("id"));
 				vector.add(rs.getString("Name"));
@@ -149,7 +152,6 @@ public class mainManagerFr_Ver2 extends JFrame {
 			}
 			tableProduct.setModel(model2);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -170,6 +172,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 			
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
+				@SuppressWarnings("rawtypes")
 				Vector vector = new Vector();
 				vector.add(rs.getString("EmpID"));
 				vector.add(rs.getString("EmpName"));
@@ -195,6 +198,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static void showDataCustomer() {
 		
 		try {
@@ -204,15 +208,16 @@ public class mainManagerFr_Ver2 extends JFrame {
 			
 			Connection cn = DBConnection.getConnection();
 			
-			String query = "select * from dbo.Customer1 order by ID ASC";
+			String query = "select * from dbo.Customer order by CustomerID ASC";
 			PreparedStatement ps = cn.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
+				@SuppressWarnings("rawtypes")
 				Vector vector = new Vector();
-				vector.add(rs.getString("ID"));
-				vector.add(rs.getString("fullName"));
-				vector.add(rs.getString("Address"));
-				vector.add(rs.getString("Phone"));
+				vector.add(rs.getString("CustomerID"));
+				vector.add(rs.getString("CustomerName"));
+				vector.add(rs.getString("CustomerAddress"));
+				vector.add(rs.getString("CustomerPhone"));
 				model3.addRow(vector);
 			}
 			tableCustomer.setModel(model3);
@@ -221,6 +226,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static void showDataSupplier() {
 		tableSupplier.removeAll();
 		String[] arr4 = {"ID", "Supplier Name", "Contact Name", "Address", "Phone Number"};
@@ -234,6 +240,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 			ps = cn.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
+				@SuppressWarnings("rawtypes")
 				Vector vector = new Vector();
 				vector.add(rs.getString("SupID"));
 				vector.add(rs.getString("SupName"));
@@ -248,6 +255,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static void showDataCategory() {
 		tableCategory.removeAll();
 		String[] arr5 = {"Category ID", "Category"};
@@ -261,6 +269,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 			ps = cn.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
+				@SuppressWarnings("rawtypes")
 				Vector vector = new Vector();
 				vector.add(rs.getString("CategoryID"));
 				vector.add(rs.getString("CategoryName"));
@@ -272,6 +281,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static void showDataTakings() {
 		
 		try {
@@ -285,6 +295,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 			PreparedStatement ps = cn.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
+				@SuppressWarnings("rawtypes")
 				Vector vector = new Vector();
 				vector.add(rs.getString("billID"));
 				vector.add(rs.getString("price"));
@@ -299,6 +310,53 @@ public class mainManagerFr_Ver2 extends JFrame {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
+	public void findProduct() {
+		try {
+			tableStaff.removeAll();
+			String[] arr1 = {"ID", "Full Name", "Age", "Address", "Phone Number", "UserName", "Password", "Position"};
+			DefaultTableModel model = new DefaultTableModel(arr1,0);
+			
+			Connection cn = DBConnection.getConnection();
+			
+			String id = textField_FindID.getText();
+			String name = textField_FindName.getText();
+			String query;
+			
+			if(textField_FindName.getText().equals("")) {
+				query = "select id,name,supid,cateid,convert(varchar(20), MFG, 103) as MFG,convert(varchar(20), EXP, 103) as EXP,unit,price from dbo.Product where id = '"+ id +"'";
+			}else if(textField_FindID.getText().equals("")) {
+				query = "select id,name,supid,cateid,convert(varchar(20), MFG, 103) as MFG,convert(varchar(20), EXP, 103) as EXP,unit,price from dbo.Product where name like N'%"+ name +"%'";
+			}else if(textField_FindName.getText().equals("") && textField_FindID.getText().equals("")) {
+				JOptionPane.showMessageDialog(null, "Chưa có dữ liệu!");
+				return;
+			}else {
+				query = "select id,name,supid,cateid,convert(varchar(20), MFG, 103) as MFG,convert(varchar(20), EXP, 103) as EXP,unit,price from dbo.Product where id = '"+ id +"' and Name like N'%"+ name +"%'";
+			}
+			
+			PreparedStatement ps = cn.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				@SuppressWarnings("rawtypes")
+				Vector vector = new Vector();
+				vector.add(rs.getString("id"));
+				vector.add(rs.getString("Name"));
+				vector.add(rs.getString("SupID"));
+				vector.add(rs.getString("CateID"));
+				vector.add(rs.getString("MFG"));
+				vector.add(rs.getString("EXP"));
+				vector.add(rs.getString("Unit"));
+				vector.add(rs.getString("Price"));
+				model.addRow(vector);
+			}
+			tableProduct.setModel(model);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
 	public void findStaff() {
 		try {
 			tableStaff.removeAll();
@@ -315,7 +373,6 @@ public class mainManagerFr_Ver2 extends JFrame {
 				query = "select EmpID,EmpName,convert(varchar(20), BoD, 103)as BoD,EmpAddress,PhoneNum,Username,pw,position from Employees where Empid = '"+ id +"'";
 			}else if(textField_FindID.getText().equals("")) {
 				query = "select EmpID,EmpName,convert(varchar(20), BoD, 103)as BoD,EmpAddress,PhoneNum,Username,pw,position from Employees where EmpName like N'%"+ name +"%'";
-
 			}else if(textField_FindName.getText().equals("") && textField_FindID.getText().equals("")) {
 				JOptionPane.showMessageDialog(null, "Chưa có dữ liệu!");
 				return;
@@ -327,7 +384,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 			ResultSet rs1 = ps.executeQuery();
 			
 			while (rs1.next()) {
-				
+				@SuppressWarnings("rawtypes")
 				Vector vector = new Vector();
 				vector.add(rs1.getString("EmpID"));
 				vector.add(rs1.getString("EmpName"));
@@ -336,7 +393,6 @@ public class mainManagerFr_Ver2 extends JFrame {
 				vector.add(rs1.getString("PhoneNum"));
 				vector.add(rs1.getString("Username"));
 				vector.add(rs1.getString("pw"));
-				
 				
 				int rsPst = Integer.parseInt(rs1.getString("position"));
 				if( rsPst == 1) {
@@ -354,22 +410,169 @@ public class mainManagerFr_Ver2 extends JFrame {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
+	public void findCustomer() {
+		try {
+			tableStaff.removeAll();
+			String[] arr1 = {"ID","Full Name","Address","Phone Number"};
+			DefaultTableModel model = new DefaultTableModel(arr1,0);
+			
+			Connection cn = DBConnection.getConnection();
+			
+			String id = textField_FindID.getText();
+			String name = textField_FindName.getText();
+			String query;
+			
+			if(textField_FindName.getText().equals("")) {
+				query = "select * from dbo.Customer where Customerid = '"+ id +"'";
+			}else if(textField_FindID.getText().equals("")) {
+				query = "select * from dbo.Customer where CustomerName like N'%"+ name +"%'";
+			}else if(textField_FindName.getText().equals("") && textField_FindID.getText().equals("")) {
+				JOptionPane.showMessageDialog(null, "Chưa có dữ liệu!");
+				return;
+			}else {
+				query = "select * from dbo.Customer where Customerid = '"+ id +"' and customerName like N'%"+ name +"%'";
+			}
+			
+			PreparedStatement ps = cn.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			
+			while (rs.next()) {
+				@SuppressWarnings("rawtypes")
+				Vector vector = new Vector();
+				vector.add(rs.getString("CustomerID"));
+				vector.add(rs.getString("CustomerName"));
+				vector.add(rs.getString("CustomerAddress"));
+				vector.add(rs.getString("CustomerPhone"));
+				model.addRow(vector);
+			}
+			tableCustomer.setModel(model);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static void findSupplier() {
+		tableSupplier.removeAll();
+		String[] arr4 = {"ID", "Supplier Name", "Contact Name", "Address", "Phone Number"};
+		DefaultTableModel model4 = new DefaultTableModel(arr4,0);
+		
+		Connection cn = DBConnection.getConnection();
+		
+		String id = textField_FindID.getText();
+		String name = textField_FindName.getText();
+		String query;
+		
+		if(textField_FindName.getText().equals("")) {
+			query = "select * from dbo.Supplier where Supid = '"+ id +"'";
+		}else if(textField_FindID.getText().equals("")) {
+			query = "select * from dbo.Supplier where SupName like N'%"+ name +"%'";
+		}else if(textField_FindName.getText().equals("") && textField_FindID.getText().equals("")) {
+			JOptionPane.showMessageDialog(null, "Chưa có dữ liệu!");
+			return;
+		}else {
+			query = "select * from dbo.Supplier where Supid = '"+ id +"' and SupName like N'%"+ name +"%'";
+		}
+		try {
+			PreparedStatement ps = cn.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				@SuppressWarnings("rawtypes")
+				Vector vector = new Vector();
+				vector.add(rs.getString("SupID"));
+				vector.add(rs.getString("SupName"));
+				vector.add(rs.getString("ContactName"));
+				vector.add(rs.getString("SupAddress"));
+				vector.add(rs.getString("SupPhone"));
+				model4.addRow(vector);
+			}
+			tableSupplier.setModel(model4);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static void findCategory() {
+		tableCategory.removeAll();
+		String[] arr5 = {"Category ID", "Category"};
+		DefaultTableModel model5 = new DefaultTableModel(arr5,0);
+		
+		Connection cn = DBConnection.getConnection();
+		
+		String id = textField_FindID.getText();
+		String name = textField_FindName.getText();
+		String query;
+		
+		if(textField_FindName.getText().equals("")) {
+			query = "select * from dbo.Category where Categoryid = '"+ id +"'";
+		}else if(textField_FindID.getText().equals("")) {
+			query = "select * from dbo.Category where CategoryName like N'%"+ name +"%'";
+		}else if(textField_FindName.getText().equals("") && textField_FindID.getText().equals("")) {
+			JOptionPane.showMessageDialog(null, "Chưa có dữ liệu!");
+			return;
+		}else {
+			query = "select * from dbo.Category where Categoryid = '"+ id +"' and CategoryName like N'%"+ name +"%'";
+		}
+		PreparedStatement ps;
+		try {
+			ps = cn.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				@SuppressWarnings("rawtypes")
+				Vector vector = new Vector();
+				vector.add(rs.getString("CategoryID"));
+				vector.add(rs.getString("CategoryName"));
+				model5.addRow(vector);
+			}
+			tableCategory.setModel(model5);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static void findTakings() {
+		
+		try {
+			tableCustomer.removeAll();
+			String[] arr3 = {"Bill ID", "Total Price", "Discount", "Bill Date", "Staff ID"};
+			DefaultTableModel model3 = new DefaultTableModel(arr3,0);
+			
+			Connection cn = DBConnection.getConnection();
+			String id = textField_FindID.getText();
+			String query;
+			
+			if(textField_FindID.getText().equals("")) {
+				JOptionPane.showMessageDialog(null, "Chưa nhập ID!");
+				return;
+			}else {
+				query = "select billID,price,discount,convert(varchar(50), billDate, 29)as billdate,empID from Bill where billID = '"+ id +"'";
+			}
+			PreparedStatement ps = cn.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				@SuppressWarnings("rawtypes")
+				Vector vector = new Vector();
+				vector.add(rs.getString("billID"));
+				vector.add(rs.getString("price"));
+				vector.add(rs.getString("discount"));
+				vector.add(rs.getString("billDate"));
+				vector.add(rs.getString("empID"));
+				model3.addRow(vector);
+			}
+			tableTakings.setModel(model3);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public mainManagerFr_Ver2() {
 		setTitle("Circle K App");
 		ImageIcon img = new ImageIcon("D:\\JavaWorkSpace\\CircleKAppDemo\\src\\Img\\logo.selectionTab.png");
 		setIconImage(img.getImage());
 		
-		addComponentListener(new ComponentAdapter() {
-			@Override
-			public void componentShown(ComponentEvent e) {
-				showDataProduct();
-				
-				showDataCustomer();
-				showDataSupplier();
-				showDataCategory();
-				showDataTakings();
-			}
-		});
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 50, 1280, 720);
 		setUndecorated(true);
@@ -593,7 +796,7 @@ public class mainManagerFr_Ver2 extends JFrame {
 		JLabel lblTakings = new JLabel("TAKINGS");
 		lblTakings.setForeground(Color.WHITE);
 		lblTakings.setFont(new Font("Monospaced", Font.BOLD, 20));
-		lblTakings.setBounds(93, 0, 137, 70);
+		lblTakings.setBounds(90, 10, 137, 70);
 		billPanel.add(lblTakings);
 		
 		JLabel lblIconTakings = new JLabel("");
@@ -623,7 +826,6 @@ public class mainManagerFr_Ver2 extends JFrame {
 		tableProduct.setFont(new Font("Cambria", Font.BOLD, 14));
 		tableProduct.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null, null, null, null},
 			},
 			new String[] {
 				"ID", "Name", "Supplier ID", "Category ID", "MFG", "EXP", "Unit", "Price"
@@ -685,11 +887,17 @@ public class mainManagerFr_Ver2 extends JFrame {
 		panelProducts.add(lblDeletePr);
 		
 		JLabel lblFindPr = new JLabel("Find", SwingConstants.CENTER);
+		lblFindPr.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				findProduct();
+			}
+		});
 		lblFindPr.setOpaque(true);
 		lblFindPr.setForeground(Color.WHITE);
 		lblFindPr.setFont(new Font("Monospaced", Font.BOLD, 20));
 		lblFindPr.setBackground(new Color(236, 41, 52));
-		lblFindPr.setBounds(295, 600, 155, 70);
+		lblFindPr.setBounds(404, 600, 155, 70);
 		panelProducts.add(lblFindPr);
 		
 		JLabel lblUpdate = new JLabel("Update", SwingConstants.CENTER);
@@ -733,6 +941,20 @@ public class mainManagerFr_Ver2 extends JFrame {
 		lblUpdate.setBackground(new Color(236, 41, 52));
 		lblUpdate.setBounds(583, 600, 155, 70);
 		panelProducts.add(lblUpdate);
+		
+		JLabel lblShowPr = new JLabel("Show", SwingConstants.CENTER);
+		lblShowPr.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				showDataProduct();
+			}
+		});
+		lblShowPr.setOpaque(true);
+		lblShowPr.setForeground(Color.WHITE);
+		lblShowPr.setFont(new Font("Monospaced", Font.BOLD, 20));
+		lblShowPr.setBackground(new Color(236, 41, 52));
+		lblShowPr.setBounds(211, 600, 155, 70);
+		panelProducts.add(lblShowPr);
 		
 		panelStaffs = new JPanel();
 		layeredPane.add(panelStaffs, "name_89813235964000");
@@ -876,19 +1098,19 @@ public class mainManagerFr_Ver2 extends JFrame {
 		lblFindStaff.setBounds(386, 600, 155, 70);
 		panelStaffs.add(lblFindStaff);
 		
-		JLabel lblShow = new JLabel("Show", SwingConstants.CENTER);
-		lblShow.addMouseListener(new MouseAdapter() {
+		JLabel lblShowStaff = new JLabel("Show", SwingConstants.CENTER);
+		lblShowStaff.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				showDataStaff();
 			}
 		});
-		lblShow.setOpaque(true);
-		lblShow.setForeground(Color.WHITE);
-		lblShow.setFont(new Font("Monospaced", Font.BOLD, 20));
-		lblShow.setBackground(new Color(236, 41, 52));
-		lblShow.setBounds(194, 600, 155, 70);
-		panelStaffs.add(lblShow);
+		lblShowStaff.setOpaque(true);
+		lblShowStaff.setForeground(Color.WHITE);
+		lblShowStaff.setFont(new Font("Monospaced", Font.BOLD, 20));
+		lblShowStaff.setBackground(new Color(236, 41, 52));
+		lblShowStaff.setBounds(194, 600, 155, 70);
+		panelStaffs.add(lblShowStaff);
 		
 		panelCustomers = new JPanel();
 		layeredPane.add(panelCustomers, "name_89867989374100");
@@ -902,7 +1124,6 @@ public class mainManagerFr_Ver2 extends JFrame {
 		tableCustomer.setFont(new Font("Cambria", Font.BOLD, 14));
 		tableCustomer.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null},
 			},
 			new String[] {
 				"ID", "Full Name", "Address", "Phone Number"
@@ -998,12 +1219,32 @@ public class mainManagerFr_Ver2 extends JFrame {
 		panelCustomers.add(lblDeleteCus);
 		
 		JLabel lblFindCus = new JLabel("Find", SwingConstants.CENTER);
+		lblFindCus.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				findCustomer();
+			}
+		});
 		lblFindCus.setOpaque(true);
 		lblFindCus.setForeground(Color.WHITE);
 		lblFindCus.setFont(new Font("Monospaced", Font.BOLD, 20));
 		lblFindCus.setBackground(new Color(236, 41, 52));
-		lblFindCus.setBounds(295, 600, 155, 70);
+		lblFindCus.setBounds(395, 600, 155, 70);
 		panelCustomers.add(lblFindCus);
+		
+		JLabel lblShowCus = new JLabel("Show", SwingConstants.CENTER);
+		lblShowCus.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				showDataCustomer();
+			}
+		});
+		lblShowCus.setOpaque(true);
+		lblShowCus.setForeground(Color.WHITE);
+		lblShowCus.setFont(new Font("Monospaced", Font.BOLD, 20));
+		lblShowCus.setBackground(new Color(236, 41, 52));
+		lblShowCus.setBounds(209, 600, 155, 70);
+		panelCustomers.add(lblShowCus);
 		
 		panelSupplier = new JPanel();
 		layeredPane.add(panelSupplier, "name_21413985300800");
@@ -1109,13 +1350,33 @@ public class mainManagerFr_Ver2 extends JFrame {
 		lblDeleteSupp.setBounds(850, 600, 155, 70);
 		panelSupplier.add(lblDeleteSupp);
 		
-		JLabel lblFindCus_1 = new JLabel("Find", SwingConstants.CENTER);
-		lblFindCus_1.setOpaque(true);
-		lblFindCus_1.setForeground(Color.WHITE);
-		lblFindCus_1.setFont(new Font("Monospaced", Font.BOLD, 20));
-		lblFindCus_1.setBackground(new Color(236, 41, 52));
-		lblFindCus_1.setBounds(295, 600, 155, 70);
-		panelSupplier.add(lblFindCus_1);
+		JLabel lblFindSupp = new JLabel("Find", SwingConstants.CENTER);
+		lblFindSupp.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				findSupplier();
+			}
+		});
+		lblFindSupp.setOpaque(true);
+		lblFindSupp.setForeground(Color.WHITE);
+		lblFindSupp.setFont(new Font("Monospaced", Font.BOLD, 20));
+		lblFindSupp.setBackground(new Color(236, 41, 52));
+		lblFindSupp.setBounds(396, 600, 155, 70);
+		panelSupplier.add(lblFindSupp);
+		
+		JLabel lblShowSupp = new JLabel("Show", SwingConstants.CENTER);
+		lblShowSupp.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				showDataSupplier();
+			}
+		});
+		lblShowSupp.setOpaque(true);
+		lblShowSupp.setForeground(Color.WHITE);
+		lblShowSupp.setFont(new Font("Monospaced", Font.BOLD, 20));
+		lblShowSupp.setBackground(new Color(236, 41, 52));
+		lblShowSupp.setBounds(187, 600, 155, 70);
+		panelSupplier.add(lblShowSupp);
 		
 		panelCategory = new JPanel();
 		layeredPane.add(panelCategory, "name_21437883108900");
@@ -1155,11 +1416,17 @@ public class mainManagerFr_Ver2 extends JFrame {
 		panelCategory.add(lblAddCate);
 		
 		JLabel lblFindCate = new JLabel("Find", SwingConstants.CENTER);
+		lblFindCate.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				findCategory();
+			}
+		});
 		lblFindCate.setOpaque(true);
 		lblFindCate.setForeground(Color.WHITE);
 		lblFindCate.setFont(new Font("Monospaced", Font.BOLD, 20));
 		lblFindCate.setBackground(new Color(236, 41, 52));
-		lblFindCate.setBounds(295, 600, 155, 70);
+		lblFindCate.setBounds(392, 600, 155, 70);
 		panelCategory.add(lblFindCate);
 		
 		JLabel lblUpdateCate = new JLabel("Update", SwingConstants.CENTER);
@@ -1223,6 +1490,20 @@ public class mainManagerFr_Ver2 extends JFrame {
 		lblDeleteCate.setBackground(new Color(236, 41, 52));
 		lblDeleteCate.setBounds(850, 600, 155, 70);
 		panelCategory.add(lblDeleteCate);
+		
+		JLabel lblShowCate = new JLabel("Show", SwingConstants.CENTER);
+		lblShowCate.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				showDataCategory();
+			}
+		});
+		lblShowCate.setOpaque(true);
+		lblShowCate.setForeground(Color.WHITE);
+		lblShowCate.setFont(new Font("Monospaced", Font.BOLD, 20));
+		lblShowCate.setBackground(new Color(236, 41, 52));
+		lblShowCate.setBounds(203, 600, 155, 70);
+		panelCategory.add(lblShowCate);
 		
 		panelTakings = new JPanel();
 		layeredPane.add(panelTakings, "name_275445001643400");
@@ -1335,6 +1616,34 @@ public class mainManagerFr_Ver2 extends JFrame {
 		lblDayToDay.setBounds(0, 40, 138, 35);
 		panelRevenue.add(lblDayToDay);
 		
+		JLabel lblShowTakings = new JLabel("Show", SwingConstants.CENTER);
+		lblShowTakings.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				showDataTakings();
+			}
+		});
+		lblShowTakings.setOpaque(true);
+		lblShowTakings.setForeground(Color.WHITE);
+		lblShowTakings.setFont(new Font("Monospaced", Font.BOLD, 20));
+		lblShowTakings.setBackground(new Color(236, 41, 52));
+		lblShowTakings.setBounds(570, 595, 155, 70);
+		panelTakings.add(lblShowTakings);
+		
+		JLabel lblFindTakings = new JLabel("Find", SwingConstants.CENTER);
+		lblFindTakings.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				findTakings();
+			}
+		});
+		lblFindTakings.setOpaque(true);
+		lblFindTakings.setForeground(Color.WHITE);
+		lblFindTakings.setFont(new Font("Monospaced", Font.BOLD, 20));
+		lblFindTakings.setBackground(new Color(236, 41, 52));
+		lblFindTakings.setBounds(800, 595, 155, 70);
+		panelTakings.add(lblFindTakings);
+		
 		JLabel lblIconExit1 = new JLabel();
 		lblIconExit1.setBounds(1210, 3, 55, 39);
 		lblIconExit1.setIcon(new ImageIcon("D:\\JavaWorkSpace\\CircleKAppDemo\\src\\Img\\ExitButtonIcon.png"));
@@ -1435,7 +1744,6 @@ public class mainManagerFr_Ver2 extends JFrame {
 	}
 	
 	
-	@SuppressWarnings("unused")
 	private boolean checkTrungIDProduct() {
 		try {
 			Connection cn = DBConnection.getConnection();
@@ -1454,7 +1762,6 @@ public class mainManagerFr_Ver2 extends JFrame {
 	}
 	
 	
-	@SuppressWarnings("unused")
 	private boolean checkTrungIDStaff() {
 		try {
 			Connection cn = DBConnection.getConnection();
@@ -1472,7 +1779,6 @@ public class mainManagerFr_Ver2 extends JFrame {
 		return false;
 	}
 	
-	@SuppressWarnings("unused")
 	private boolean checkTrungIDCustomer() {
 		try {
 			Connection cn = DBConnection.getConnection();
